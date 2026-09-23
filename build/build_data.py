@@ -464,6 +464,21 @@ def records_of(entities, order, types):
     return out
 
 
+def reading_order(c):
+    """An arc's scenes as the table plays them (index.js carries it, so the Loremaster's
+    page lists an adventure before its book is loaded): each Part's SCENE_REFs in turn, then
+    the scenes no Part names, in document order. Names and Parts are the corpus's strings."""
+    by_id = {s["id"]: s for s in c["scenes"]}
+    out, seen = [], set()
+    for p in c["phases"]:
+        for sid in p["scenes"]:
+            if sid in by_id and sid not in seen:
+                seen.add(sid)
+                out.append({"id": sid, "name": by_id[sid]["name"], "part": p["name"]})
+    out += [{"id": s["id"], "name": s["name"], "part": None} for s in c["scenes"] if s["id"] not in seen]
+    return out
+
+
 # ───────────────────────── emit ─────────────────────────
 
 def main():
@@ -536,8 +551,9 @@ def main():
         index_books.append({
             "id": b["id"], "label": b["label"], "kind": "book",
             "files": {"main": ["data/%s.js" % b["id"]]},
-            "chapters": [{"file": c["file"], "kind": c["kind"], "name": c.get("name"), "page": c["page"],
-                          "cid": c.get("cid")} for c in chapters],
+            "chapters": [dict({"file": c["file"], "kind": c["kind"], "name": c.get("name"), "page": c["page"],
+                               "cid": c.get("cid")}, **({"scenes": reading_order(c)} if c["kind"] == "arc" else {}))
+                         for c in chapters],
             "counts": counts,
             "bytes": os.path.getsize(os.path.join(data_dir, "%s.js" % b["id"])),
         })

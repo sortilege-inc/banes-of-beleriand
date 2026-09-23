@@ -172,5 +172,42 @@ window.TorDice = (function () {
     return form;
   }
 
-  return { RULES, FEAT_SIDES, EYE, RUNE, SUCCESS_SIDES, SUCCESS_ICON, WEARY_MAX, TN_BASE, MAX_RATING, tnOf, TOKEN, tokenHtml, icon, roll, verdict, line, faces, roller };
+  // ── a printed table rolled on ──────────────────────────────────────
+  // A table whose rows the book labels with Feat die faces ([Eye of Sauron], 1–10,
+  // [Gandalf Rune], or ranges "2–3") or Success die faces (1–6) is rolled with that die and
+  // read off the row the face falls in. A table labelled any other way is not rolled here.
+  function facesOf(cell) {
+    const c = String(cell).trim();
+    if (c === '[Eye of Sauron]') return [EYE];
+    if (c === '[Gandalf Rune]') return [RUNE];
+    let m = /^(\d{1,2})$/.exec(c);
+    if (m) return [+m[1]];
+    m = /^(\d{1,2})\s*[–-]\s*(\d{1,2})$/.exec(c);
+    if (m && +m[1] <= +m[2]) {
+      const out = [];
+      for (let i = +m[1]; i <= +m[2]; i++) out.push(i);
+      return out;
+    }
+    return null;
+  }
+  function tableDie(t) {
+    if (!t || !t.rows || !t.rows.length) return null;
+    const sets = t.rows.map((r) => facesOf(r[0]));
+    if (sets.some((x) => !x)) return null;
+    const all = [].concat(...sets);
+    const feat = all.some((f) => f > SUCCESS_SIDES);
+    if (!feat && all.some((f) => f < 1)) return null;
+    return { die: feat ? 'feat' : 'success', sides: feat ? FEAT_SIDES : SUCCESS_SIDES, sets };
+  }
+  // → { face, mark, row (the printed row, or null when the book prints none for that face) }
+  function rollTable(t) {
+    const td = tableDie(t);
+    if (!td) return null;
+    const face = d(td.sides);
+    const i = td.sets.findIndex((s) => s.indexOf(face) !== -1);
+    const mark = td.die === 'feat' && face === EYE ? 'Eye of Sauron' : td.die === 'feat' && face === RUNE ? 'Gandalf Rune' : null;
+    return { die: td.die, face, mark, row: i === -1 ? null : t.rows[i], index: i };
+  }
+
+  return { tableDie, rollTable, RULES, FEAT_SIDES, EYE, RUNE, SUCCESS_SIDES, SUCCESS_ICON, WEARY_MAX, TN_BASE, MAX_RATING, tnOf, TOKEN, tokenHtml, icon, roll, verdict, line, faces, roller };
 })();

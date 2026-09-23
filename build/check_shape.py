@@ -103,6 +103,12 @@ def main():
     check("arc document order lists every block", sum(len(c["seq"]) for c in arcs),
           sum(len(c["props"]) + len(c["locations"]) + len(c["scenes"]) + len(c["roots"]) for c in arcs))
 
+    # the index lists every arc's scenes, once each, in reading order
+    ix_scenes = {c["cid"]: c.get("scenes") for b in index["books"] for c in b["chapters"] if c["kind"] == "arc"}
+    for c in arcs:
+        got_ids = [s["id"] for s in ix_scenes.get(c["cid"]) or []]
+        check("index scenes of %s" % c["cid"], sorted(got_ids), sorted(s["id"] for s in c["scenes"]))
+
     # tables, cell for cell
     tables = [e["table"] for e in entities.values() if e["table"]]
     tables += [b["table"] for c in arcs for b in c["scenes"] + c["locations"] if b["table"]]
