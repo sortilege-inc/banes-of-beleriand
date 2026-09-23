@@ -138,14 +138,21 @@ def main():
     check("every corpus file in one chapter", sorted(in_chapters), files)
     check("no file twice", [f for f, k in in_chapters.items() if k > 1 and not f.endswith(".actor")], [])
 
-    # the rules the dice cite (system/tor2e/dice.js RULES) are core entities under those names
-    src = open(os.path.join(HERE, "system", "tor2e", "dice.js"), encoding="utf-8").read()
-    cited = re.findall(r"\{ id: '(#\w+)', name: '([^']+)' \}", src)
-    check("the dice cite rules", len(cited) > 0, True)
-    for h, name in cited:
-        e = entities.get(h)
-        check("dice rule %s" % name, (e or {}).get("name"), name)
-        check("dice rule %s is in the core" % name, (e or {}).get("book"), "core")
+    # the rules the dice and the sheet cite (RULES in system/tor2e/dice.js, sheet.js) are core
+    # entities under those names; every entity id the creator names is a core entity
+    for fn in ("dice.js", "sheet.js"):
+        src = open(os.path.join(HERE, "system", "tor2e", fn), encoding="utf-8").read()
+        cited = re.findall(r"\{ id: '(#\w+)', name: '([^']+)' \}", src)
+        check("%s cites rules" % fn, len(cited) > 0, True)
+        for h, name in cited:
+            e = entities.get(h)
+            check("%s rule %s" % (fn, name), (e or {}).get("name"), name)
+            check("%s rule %s is in the core" % (fn, name), (e or {}).get("book"), "core")
+    src = open(os.path.join(HERE, "system", "tor2e", "creator.js"), encoding="utf-8").read()
+    ids = re.findall(r"= '(#t\w+)';", src)
+    check("creator.js names entities", len(ids) >= 8, True)
+    for h in ids:
+        check("creator.js entity %s is in the core" % h, (entities.get(h) or {}).get("book"), "core")
 
     if failures:
         print("check_shape: %d of %d assertions FAILED" % (len(failures), n[0]))
