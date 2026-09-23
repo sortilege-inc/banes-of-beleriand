@@ -12,8 +12,7 @@ proven in the browser through the real controls.
 
 Two repos take part:
 
-- **here** — `sortilege-inc/banes-of-beleriand` (the GitHub repo is **public**; nothing pushed —
-  see O1).
+- **here** — `sortilege-inc/banes-of-beleriand` (**public**, pushed 2026-09-23 — O1).
 - **upstream** — `sortilege-inc/sortilege-vtt-tor2e` (private). Everything generic is built
   there and pulled here.
 
@@ -28,19 +27,15 @@ the root, updated by merge; the VTT owns `/` and `/gm/` and the campaign lives i
 homebrew that must be right is a DSL layer through the VTT's gate; the process is written down
 as it is proven.
 
-**O1 — Visibility and deployment: PROPOSED, awaiting the owner.** The GitHub repo
-`sortilege-inc/banes-of-beleriand` is **public** and empty. The first push publishes upstream's
-`data/` — the nine TOR2e books, Free League's text verbatim, 5.3 MB — which upstream itself keeps
-private (its D3). Options:
+**O1 — Public (owner, 2026-09-23).** The repo stays public and publishes upstream's `data/` — the
+nine TOR2e books, Free League's text verbatim, 5.3 MB — although upstream itself is private (its
+D3). The owner pushed `main` at `372fa9c` on 2026-09-23; that push was the point of publication
+and cannot be taken back. (Considered: making the repo private first, as upstream is; or pushing
+nothing yet.)
 
-| | What | Trade-off |
-|---|---|---|
-| **A (recommended)** | Make the GitHub repo **private**, then push; serve locally until you choose an origin | Matches upstream's D3; nothing published; the work is backed up. A player can't reach it until deployed. |
-| B | Keep it public and push | As Portents (its O1) and the TEETH / Troika / Invisible Sun VTTs: GitHub Pages works at once, but the books are published — cannot be taken back. |
-| C | Keep it public, push nothing yet | Nothing lost, nothing backed up; the local commits are the only copy. |
-
-Until O1: every commit stays **local**. The Worker is not deployed; `worker/wrangler.jsonc`
-admits only `https://sortilege-inc.github.io`; there is no `CNAME`.
+Still open under O1: GitHub Pages from `main` (the owner's step in Settings → Pages); the origin
+— no `CNAME` yet, and `worker/wrangler.jsonc` admits only `https://sortilege-inc.github.io`; the
+Worker is not deployed (`engine/config.js` `worker.deployed` empty).
 
 ## Layout
 
@@ -65,10 +60,10 @@ campaign/                                                              INSTANCE-
 | # | Where | Milestone | Proof |
 |---|---|---|---|
 | U1 | upstream | **The instance hooks, ported from l5r5e** (Portents' M2): `engine/instance.js`, the stage tags in the four pages, titles from `VttConfig.title`, `build/build_layer.py` + `.sh` with four gates and a fixture | **landed 2026-09-23**, `1d46040` (merged `239254a`, pushed to the private upstream). Upstream's own gate after the change: *11629 strings — 0 uncovered · 0 unsourced*, *check_shape: OK (115 assertions)*, `data/` byte-identical (0 of 12 files differ). The fixture passes all four gates and each was made to fail (a mistyped type hash, a corpus id reused, a misspelt name, tampered data). Browser, no instance declared: every page titled and branded *The One Ring* as before. Full proof in upstream `PLAN.md` § *Instances* |
-| M1 | here | **The fork and the boundary.** `upstream` remote; its history merged at the root; the instance-owned root files; `.gitattributes` `merge=ours` + `git config merge.ours.driver true` | **landed 2026-09-23**, `f3485b6` (local). The repo had no commits, so the merge fast-forwarded to upstream's `239254a` and nothing had to move (Portents' move commit does not apply). In a throwaway clone, a fake upstream commit editing `engine/config.js` and `index.html`: **without** the driver → *CONFLICT (content): Merge conflict in engine/config.js*; **with** it → `title: 'Banes of Beleriand'` kept and `index.html` took upstream's edit. A real `git fetch upstream && git merge upstream/main` → *Already up to date* |
+| M1 | here | **The fork and the boundary.** `upstream` remote; its history merged at the root; the instance-owned root files; `.gitattributes` `merge=ours` + `git config merge.ours.driver true` | **landed 2026-09-23**, `f3485b6`. The repo had no commits, so the merge fast-forwarded to upstream's `239254a` and nothing had to move (Portents' move commit does not apply). In a throwaway clone, a fake upstream commit editing `engine/config.js` and `index.html`: **without** the driver → *CONFLICT (content): Merge conflict in engine/config.js*; **with** it → `title: 'Banes of Beleriand'` kept and `index.html` took upstream's edit. A real `git fetch upstream && git merge upstream/main` → *Already up to date* |
 | M2 | here | **The campaign in the VTT's framing.** The DSL layer (a skeleton), the docs pipeline with its checks, six site tabs ahead of the books, the *Behind the Veil* panel with the Company loader | **landed 2026-09-23** — see *M2 proof* below |
 | M3 | here | **The campaign's content** — the Company, the chronicle, the people, places and the Loremaster's state, written into `campaign/docs/`, `campaign/dsl/` and `campaign/pack/` | Not started: needs the owner (see *Next*) |
-| M4 | here | **Deploy** (after O1): push; Pages; the Worker for this origin; a player joins from a second origin, claims a hero, rolls | — |
+| M4 | here | **Deploy**: push (**done 2026-09-23**, the owner, `372fa9c`); Pages; the Worker for this origin; a player joins from a second origin, claims a hero, rolls | — |
 
 ### M2 proof (2026-09-23, browser on 8742, through the real controls)
 
@@ -122,7 +117,7 @@ campaign/                                                              INSTANCE-
 
 ## Next
 
-**O1** (above) — needed before anything is pushed.
+**O1's remainder** (above) — Pages, an origin, the Worker.
 
 **The content (M3).** No campaign material was in this repo. Found elsewhere on disk, untouched:
 `~/Downloads/Unsorted Sortilege/Transcripts/` holds four session transcripts titled *Banes of
