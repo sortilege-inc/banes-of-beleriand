@@ -141,38 +141,43 @@ window.TorCreator = (function () {
       (D.val(c, 'Skills') || []).forEach((it) => { const f = {}; (it.fields || []).forEach((x) => { f[x.name] = x.value; }); ranks[f.Skill] = f.Rank; });
       const copy = () => change(d, { Skills: v.Skills.map((r) => Object.assign({}, r, { Rank: ranks[r.Skill] != null ? ranks[r.Skill] : r.Rank })), _ranksFrom: c.id });
       const choice = String(D.text(c, 'Combat Proficiency Choice') || '');
+      const instruction = String(D.text(c, 'Combat Proficiency Choice Instruction') || '');
       const options = choice.split(/\s+OR\s+/).map((s) => s.trim()).filter(Boolean);
+      // the ranks the book prints beside the two lines (^"Combat Proficiencies" DEF { ^"<line>" INTEGER rank })
+      const printedRank = fields(c, 'Combat Proficiencies');
+      const rankFor = (key) => printedRank[key === '_profA' ? choice : instruction];
       const setProf = (name, rank, key) => {
         const prev = v[key];
         const list = v['Combat Proficiencies'].map((p) => (p.Skill === prev ? Object.assign({}, p, { Rank: 0 }) : p)).map((p) => (p.Skill === name ? Object.assign({}, p, { Rank: rank }) : p));
         change(d, { 'Combat Proficiencies': list, [key]: name });
         redraw();
       };
+      // a culture whose record lacks a printed rank (none in the corpus today) lets the player enter it
+      const rankIn = (key) => (rankFor(key) != null ? el('b', {}, [String(rankFor(key))]) : el('input', { class: 'text num small', type: 'number', min: '0', max: '6',
+        value: v[key] ? String((v['Combat Proficiencies'].find((p) => p.Skill === v[key]) || {}).Rank || '') : '',
+        onchange: (ev) => v[key] && setProf(v[key], parseInt(ev.target.value || '0', 10), key) }));
       const profPick = (key, names, label) => el('div', { class: 'chiprow tight' }, [
         el('span', { class: 'muted small', html: E.inline(label) }),
-        el('select', { class: 'scope', onchange: (ev) => setProf(ev.target.value, parseInt(rankIn[key].value || '0', 10) || 0, key) }, [el('option', { value: '' }, ['—'])].concat(names.map((n) => el('option', { value: n, selected: v[key] === n || null }, [n])))),
-        el('span', { class: 'muted small' }, ['rank']), rankIn[key],
+        el('select', { class: 'scope', onchange: (ev) => setProf(ev.target.value, rankFor(key) != null ? rankFor(key) : 0, key) }, [el('option', { value: '' }, ['—'])].concat(names.map((n) => el('option', { value: n, selected: v[key] === n || null }, [n])))),
+        el('span', { class: 'muted small' }, ['rank']), rankIn(key),
       ]);
-      const rankIn = {
-        _profA: el('input', { class: 'text num small', type: 'number', min: '0', max: '6', value: v._profA ? String((v['Combat Proficiencies'].find((p) => p.Skill === v._profA) || {}).Rank || '') : '', onchange: (ev) => v._profA && setProf(v._profA, parseInt(ev.target.value || '0', 10), '_profA') }),
-        _profB: el('input', { class: 'text num small', type: 'number', min: '0', max: '6', value: v._profB ? String((v['Combat Proficiencies'].find((p) => p.Skill === v._profB) || {}).Rank || '') : '', onchange: (ev) => v._profB && setProf(v._profB, parseInt(ev.target.value || '0', 10), '_profB') }),
+      // the Favoured Skill: one of the two the book underlines (^"Favoured Skill Choices")
+      const pair = (D.val(c, 'Favoured Skill Choices') || []).map((x) => String(x.value));
+      const setFav = (name) => {
+        const keep = callingFavoured(v);
+        change(d, { Skills: v.Skills.map((r) => Object.assign({}, r, { Favoured: r.Skill === name || keep.indexOf(r.Skill) !== -1 })), _cultureFavoured: name });
+        redraw();
       };
-      const favoured = v.Skills.filter((r) => r.Favoured && !(callingFavoured(v).indexOf(r.Skill) !== -1));
       return el('div', {}, [
         el('div', { class: 'chiprow' }, [button(v._ranksFrom === c.id ? 'Copied — copy again' : 'Copy the ' + c.name + '’s Skill ranks', () => { copy(); redraw(); }, v._ranksFrom === c.id ? 'ghost tiny' : 'tiny')]),
         D.text(c, 'Skills Text') ? el('div', { class: 'small', html: E.inline(D.text(c, 'Skills Text')) }) : null,
-        el('div', { class: 'chiprow tight' }, [el('span', { class: 'muted small' }, ['Favoured:']), el('select', { class: 'scope', onchange: (ev) => {
-          const name = ev.target.value;
-          const keep = callingFavoured(v);
-          change(d, { Skills: v.Skills.map((r) => Object.assign({}, r, { Favoured: r.Skill === name || keep.indexOf(r.Skill) !== -1 })), _cultureFavoured: name });
-          redraw();
-        } }, [el('option', { value: '' }, ['—'])].concat(v.Skills.map((r) => el('option', { value: r.Skill, selected: v._cultureFavoured === r.Skill || null }, [r.Skill + ' ' + (r.Rank || 0)]))))]),
-        el('div', { class: 'gap muted small' }, ['The corpus does not mark which two Skills the book underlines; choose the one the book offers. (Reported to the corpus.)']),
+        pair.length
+          ? el('div', { class: 'chiprow tight' }, [el('span', { class: 'muted small' }, ['Favoured:'])].concat(pair.map((n) => button(n, () => setFav(n), v._cultureFavoured === n ? 'tiny' : 'ghost tiny'))))
+          : el('div', { class: 'chiprow tight' }, [el('span', { class: 'muted small' }, ['Favoured:']), el('select', { class: 'scope', onchange: (ev) => setFav(ev.target.value) },
+            [el('option', { value: '' }, ['—'])].concat(v.Skills.map((r) => el('option', { value: r.Skill, selected: v._cultureFavoured === r.Skill || null }, [r.Skill + ' ' + (r.Rank || 0)]))))]),
         D.text(c, 'Combat Proficiency Note') ? el('div', { class: 'small', html: E.inline(D.text(c, 'Combat Proficiency Note')) }) : null,
         profPick('_profA', options, choice),
-        profPick('_profB', Sheet.proficiencies().map((r) => r.name).filter((n) => n !== v._profA), D.text(c, 'Combat Proficiency Choice Instruction') || ''),
-        el('div', { class: 'gap muted small' }, ['The corpus keeps these two lines but not the rank the book prints beside each; enter it from the book. (Reported to the corpus.)']),
-        favoured.length > 1 ? el('div', { class: 'muted small' }, ['More than one Favoured Skill from the culture.']) : null,
+        profPick('_profB', Sheet.proficiencies().map((r) => r.name).filter((n) => n !== v._profA), instruction),
       ]);
     }
     if (k === 'features') {
@@ -331,9 +336,12 @@ window.TorCreator = (function () {
       // the culture comes first: "each player must first choose a Heroic Culture"
       page.appendChild(el('section', { class: 'creator-step' + (v['Heroic Culture'] ? ' done' : '') }, [
         el('div', { class: 'step-text' }, ['Choose a Heroic Culture']),
-        el('div', { class: 'chiprow tight' }, D.byType('Heroic Culture').map((r) => button(r.name, () => {
-          change(d, { 'Heroic Culture': Sheet.refOf(r), 'Cultural Blessing': '', 'Standard of Living': D.f(r, 'Standard of Living') || null, _ranksFrom: null, _profA: null, _profB: null, _cultureFavoured: null, _attributeRoll: null, _experienceBase: null, _experienceSpent: 0 });
-          redraw();
+        // the core's six, then the sourcebooks' (a culture printed in two books is offered from each)
+        el('div', { class: 'chiprow tight' }, D.byType('Heroic Culture').map((r) => button(r.name + (r.book !== 'core' ? ' · ' + ((D.indexBook(r.book) || {}).label || r.book) : ''), () => {
+          D.ready(r.book).then(() => {
+            change(d, { 'Heroic Culture': Sheet.refOf(r), 'Cultural Blessing': '', 'Standard of Living': D.f(r, 'Standard of Living') || null, _ranksFrom: null, _profA: null, _profB: null, _cultureFavoured: null, _attributeRoll: null, _experienceBase: null, _experienceSpent: 0 });
+            redraw();
+          });
         }, v['Heroic Culture'] && v['Heroic Culture'].hash === r.id ? 'tiny' : 'ghost tiny'))),
         v['Heroic Culture'] ? el('details', {}, [el('summary', { class: 'muted small' }, ['The ' + v['Heroic Culture'].name + ', as the book prints them']), E.render(D.entity(v['Heroic Culture'].hash), { bare: true })]) : null,
       ]));
@@ -356,9 +364,12 @@ window.TorCreator = (function () {
         el('span', { class: 'muted small' }, ['The Loremaster loads it into the Company; a player can bring it to the table.']),
       ]));
     };
-    const b = ['core'];
-    if (!D.loaded('core')) {
-      page.appendChild(el('div', { class: 'loading' }, [Dice.icon('Gandalf Rune', 'spin'), ' Opening the Core Rules…']));
+    // the core, and the book of the draft's culture when it is a sourcebook's
+    const cur = Roster.current();
+    const rec = cur && cur.character && cur.character['Heroic Culture'] ? D.record(cur.character['Heroic Culture'].hash) : null;
+    const b = ['core'].concat(rec && rec.book !== 'core' ? [rec.book] : []);
+    if (!b.every((id) => D.loaded(id))) {
+      page.appendChild(el('div', { class: 'loading' }, [Dice.icon('Gandalf Rune', 'spin'), ' Opening the books…']));
       D.ready(b).then(go);
     } else go();
   }
