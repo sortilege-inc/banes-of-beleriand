@@ -11,5 +11,15 @@ python3 -m http.server 8741              # the site (launch entry vtt-tor2e)
 cd worker && npx wrangler dev --port 8793   # sessions (launch entry vtt-tor2e-worker)
 ```
 
+A campaign can run as an **instance** of this VTT — a fork that owns a `campaign/` folder and
+never edits upstream. It declares its own scripts in `engine/config.js` (loaded by
+`engine/instance.js`) and builds its homebrew as one more book, gated as the books are:
+
+```bash
+bash build/build_layer.sh campaign/dsl campaign "<its title>" campaign/data
+```
+
+See `PLAN.md` § *Instances*.
+
 `data/` is generated — never edit it by hand. The rules text is Free League's, carried verbatim
 from the corpus; this repo is private (PLAN.md D3).

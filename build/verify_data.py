@@ -73,9 +73,15 @@ def lore_lines(text):
 
 def corpus_strings(corpus):
     """Every string the corpus prints."""
+    return strings_of(corpus, corpus_files(corpus))
+
+
+def strings_of(root, rels):
+    """Every string these DSL and .lore files print, counted — the corpus, or an instance's
+    layer (build/build_layer.py), by the one rule."""
     want, skipped = Counter(), Counter()
-    for rel in sorted(corpus_files(corpus)):
-        path = os.path.join(corpus, rel)
+    for rel in sorted(rels):
+        path = os.path.join(root, rel)
         text = open(path, encoding="utf-8").read()
         if rel.endswith(LORE_EXTS):
             for ln in lore_lines(text):
