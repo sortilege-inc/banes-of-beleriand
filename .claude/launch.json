@@ -1,0 +1,28 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "vtt-tor2e",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8741"
+      ],
+      "port": 8741,
+      "cwd": "/home/hewhocutsdown/Sortilege/VTT/sortilege-vtt-tor2e"
+    },
+    {
+      "name": "vtt-tor2e-worker",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "wrangler",
+        "dev",
+        "--port",
+        "8793"
+      ],
+      "port": 8793,
+      "cwd": "/home/hewhocutsdown/Sortilege/VTT/sortilege-vtt-tor2e/worker"
+    }
+  ]
+}
