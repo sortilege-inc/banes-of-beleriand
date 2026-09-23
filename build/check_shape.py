@@ -132,6 +132,15 @@ def main():
     check("every corpus file in one chapter", sorted(in_chapters), files)
     check("no file twice", [f for f, k in in_chapters.items() if k > 1 and not f.endswith(".actor")], [])
 
+    # the rules the dice cite (system/tor2e/dice.js RULES) are core entities under those names
+    src = open(os.path.join(HERE, "system", "tor2e", "dice.js"), encoding="utf-8").read()
+    cited = re.findall(r"\{ id: '(#\w+)', name: '([^']+)' \}", src)
+    check("the dice cite rules", len(cited) > 0, True)
+    for h, name in cited:
+        e = entities.get(h)
+        check("dice rule %s" % name, (e or {}).get("name"), name)
+        check("dice rule %s is in the core" % name, (e or {}).get("book"), "core")
+
     if failures:
         print("check_shape: %d of %d assertions FAILED" % (len(failures), n[0]))
         for f in failures:
