@@ -1,25 +1,42 @@
-# sortilege-vtt-tor2e
+# Banes of Beleriand
 
-A virtual tabletop for **The One Ring, Second Edition**, built on the Titterpig corpus
-`titterpig-dsl-tor2e/0.5` (the core and all eight sourcebooks). A reader for the books at the
-root, the Loremaster's table under `gm/`, the player's page, and session rooms on a Cloudflare
-Worker. See `PLAN.md` for the decisions and the milestone proofs.
+A *The One Ring, Second Edition* campaign, served as an **instance** of
+[sortilege-vtt-tor2e](https://github.com/sortilege-inc/sortilege-vtt-tor2e).
 
-```bash
-bash build/build.sh                      # regenerate data/ from the corpus and run the gates
-python3 -m http.server 8741              # the site (launch entry vtt-tor2e)
-cd worker && npx wrangler dev --port 8793   # sessions (launch entry vtt-tor2e-worker)
-```
+The VTT owns the root: the site at `/`, the Loremaster's table at `/gm/`, the engine, the TOR2e
+system module, and the books generated from the Titterpig corpus. The campaign owns
+`campaign/`: its pages (Home, Chronicle, the Company, Dramatis Personae, Timeline, Atlas) are
+tabs on the VTT's site, and its Loremaster's notes are the *Behind the Veil* panel on `/gm/`.
 
-A campaign can run as an **instance** of this VTT — a fork that owns a `campaign/` folder and
-never edits upstream. It declares its own scripts in `engine/config.js` (loaded by
-`engine/instance.js`) and builds its homebrew as one more book, gated as the books are:
+- `campaign/PLAN.md` — how this instance was stood up: decisions, milestones, their proof.
+- `campaign/docs/README.md` — how to write the campaign's pages.
+
+## Building
 
 ```bash
-bash build/build_layer.sh campaign/dsl campaign "<its title>" campaign/data
+bash campaign/build/build.sh      # the campaign's DSL layer and docs → campaign/data/
 ```
 
-See `PLAN.md` § *Instances*.
+The books (`data/`) are upstream's; rebuild them (`bash build/build.sh`) only after a pull.
 
-`data/` is generated — never edit it by hand. The rules text is Free League's, carried verbatim
-from the corpus; this repo is private (PLAN.md D3).
+## The fork
+
+`upstream` is the VTT. Engine and system updates arrive by a merge, never a rebase:
+
+```bash
+git fetch upstream && git merge upstream/main
+```
+
+Upstream-owned files are never edited here — anything every TOR2e campaign would want is built
+upstream and pulled. The instance's own root files (`engine/config.js`, `worker/wrangler.jsonc`,
+`README.md`, `CNAME`, `.gitignore`, `.claude/launch.json`, `.gitattributes`) are marked
+`merge=ours`, so a pull keeps this repo's copy. That needs a driver git does not store; run once
+per clone:
+
+```bash
+git config merge.ours.driver true
+```
+
+## Local
+
+Launch entries `banes` (site, 8742) and `banes-worker` (sessions, 8795).

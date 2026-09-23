@@ -1,13 +1,14 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "sortilege-vtt-tor2e",
+  "name": "banes-vtt",
   "main": "src/index.ts",
   "compatibility_date": "2026-09-08",
   "observability": { "enabled": true, "head_sampling_rate": 1 },
   "vars": {
     // The app's own origins, comma-separated — the only non-localhost origins the Worker
-    // answers to. Until the owner picks the deployment origin (PLAN.md D3: private, local only) only the github.io
-    // address is listed; localhost / 127.0.0.1 are always admitted for `wrangler dev`.
+    // answers to. INSTANCE-OWNED: Banes of Beleriand. Its origin is not chosen yet
+    // (campaign/PLAN.md O1), so only the github.io address is listed; localhost / 127.0.0.1
+    // are always admitted for `wrangler dev`.
     "ALLOWED_ORIGIN": "https://sortilege-inc.github.io"
   },
   "durable_objects": {
