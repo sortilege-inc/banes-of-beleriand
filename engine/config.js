@@ -12,6 +12,10 @@ window.VttConfig = {
   defaultCampaign: { name: 'A new company', modules: [], books: [] },
   // the three panels the GM page opens on (engine/app.js)
   defaultSlots: ['adventure', 'company', 'inspector'],
+  // An instance (a campaign repo forked from this VTT) declares its own scripts here — its
+  // data layer, site tabs, Loremaster panels and styles — and engine/instance.js loads them at
+  // the stages the upstream pages mark. Upstream declares none. Shape: engine/instance.js.
+  instance: null,
   // The Worker that holds player sessions. Served from localhost the app talks to
   // `wrangler dev`; deployed, to the URL below. Empty = sessions disabled: the owner kept
   // this build private and local (PLAN.md D3).

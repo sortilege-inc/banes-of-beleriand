@@ -9,6 +9,11 @@
   const Sys = window.VttSystem;
   const CFG = window.VttConfig;
 
+  if (CFG && CFG.title) {
+    document.title = CFG.title + ' — play';
+    document.querySelectorAll('.brand-title').forEach((n) => (n.textContent = CFG.title));
+  }
+
   const main = document.getElementById('play-main');
   const statusEl = document.getElementById('play-status');
   const params = new URLSearchParams(location.search);

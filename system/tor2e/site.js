@@ -64,7 +64,7 @@ window.VttSiteTabs = (function () {
     const shelf = el('div', { class: 'shelf' });
     D.books().forEach((b) => {
       const c = b.counts;
-      shelf.appendChild(el('a', { class: 'shelf-book' + (b.id === 'core' ? ' core' : ''), href: ctx.href('books', [b.id]) }, [
+      shelf.appendChild(el('a', { class: 'shelf-book' + (b.id === 'core' ? ' core' : '') + (b.kind === 'campaign' ? ' campaign' : ''), href: ctx.href('books', [b.id]) }, [
         el('div', { class: 'shelf-title' }, [b.label]),
         el('div', { class: 'shelf-meta' }, [
           [c.chapters + ' chapters', c.entities + ' entries', c.arcs ? c.arcs + (c.arcs === 1 ? ' adventure' : ' adventures') : null].filter(Boolean).join(' · '),

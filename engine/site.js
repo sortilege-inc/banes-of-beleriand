@@ -5,6 +5,14 @@
 (function () {
   const { el } = window.VttRender;
   const tabs = window.VttSiteTabs || [];
+  // The deployment's name, as the Loremaster's table (engine/app.js) and the map table
+  // (engine/vtt.js) already take it: an instance names its pages in engine/config.js, never in
+  // upstream HTML.
+  const TITLE = (window.VttConfig || {}).title;
+  if (TITLE) {
+    document.title = TITLE + ' — the books';
+    document.querySelectorAll('.brand-title').forEach((n) => (n.textContent = TITLE));
+  }
   const bar = document.getElementById('site-tabs');
   const main = document.getElementById('site-main');
 

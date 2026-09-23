@@ -1,0 +1,30 @@
+EXTENSION "Fixture_Layer" EXTENDS "tor2e" {
+    NAME "The layer build's own fixture"
+    VERSION "0.1.0"
+    SPEC_VERSION "0.5"
+    RELEASE_DATE "2026-09-23"
+
+    # Not game content. The smallest layer that exercises every path of build/build_layer.py:
+    # one Loremaster Character on the corpus's type (the references gate), a sidebar that
+    # CONCERNS the layer's own entity and a corpus entity by hash (the references gate) and by
+    # name alone (the names gate). Built only to a scratch
+    # folder by the layer's tests, never into data/.
+
+    #FXLayerFixtureLMC00001 ^"Fixture Wayfarer" DEF {
+        EXTENDS #TOR0030000000000 ^"Loremaster Character"
+        PROPERTIES {
+            ^"Name" STRING "Fixture Wayfarer"
+            ^"Occupation" STRING "Fixture"
+            ^"Location" STRING "Nowhere in particular"
+            ^"Description" STRING "A fixture for the layer build, not a character."
+            ^"Noted Skills" LIST OF STRING [ "fixture" ]
+        }
+        GUIDANCE {
+            ENTRY ^"fixture-guidance" #FXLayerFixtureGuide01 {
+                CONCERNS [ #FXLayerFixtureLMC00001 ^"Fixture Wayfarer", #tGBU0c8HFFOftE5Oki3PWyV ^"Awe", ^"Awe" ]
+                TOPICS [ "fixture" ]
+                TEXT "A fixture guidance entry, not a rule."
+            }
+        }
+    }
+}

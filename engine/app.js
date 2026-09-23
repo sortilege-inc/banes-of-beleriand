@@ -84,6 +84,7 @@
     const c = State.state.campaign;
     brand.innerHTML = '';
     brand.appendChild(el('div', { class: 'brand-title' }, [CFG.title]));
+    document.title = CFG.title + ' — the Loremaster’s table';
     brand.appendChild(el('div', { class: 'brand-sub' }, [c.name || 'no campaign']));
   }
 

@@ -125,6 +125,27 @@ real controls (PLAYBOOK §5) before the next one begins.
 | 18 | M5's Worker ran from Bash (`npx wrangler dev --port 8793`), not the launch entry: the preview harness caps servers at 5 per folder and 4 were other chats'. The launch entry `vtt-tor2e-worker` stays for next time | TEETH's decision 14 precedent. |
 | 9 | **An adventure with Parts reads Part by Part**, each Part's scenes in turn, then its locations under a *Locations* heading (this tool's word) and anything else it prints; an adventure without Parts (*Star of the Mist*, a Landmark) reads in the file's order | The Hands arcs write every LOCATION ahead of every SCENE, so file order would put the map key first. |
 
+## Instances (2026-09-23)
+
+An **instance** is a campaign repo that is a fork of this VTT: it merges this repo at its root
+as `upstream`, owns a folder of its own (`campaign/`) and a short list of per-deployment root
+files, and never edits anything else. The pattern was set by Portents & Fortunes on
+`sortilege-vtt-l5r5e` (its `campaign/INSTANCE-PLAYBOOK.md`); the first instance of this VTT is
+Banes of Beleriand (`sortilege-inc/banes-of-beleriand`). What an instance needs from upstream is
+built here, on branch `instance-hooks`, ported from l5r5e's I1 and I-8:
+
+| # | Milestone | Proof |
+|---|---|---|
+| I1 | **The instance hooks.** `engine/instance.js` (copied whole from l5r5e — it names no game) loads an instance's scripts at the stages the four pages mark (`data` on every page; `site`, `gm`, `table`, `play`); `build/build_layer.py` builds an instance's DSL layer as one more book, gated four ways; every page takes its name from `VttConfig.title`; the shelf marks a campaign book | **landed 2026-09-23** — `bash build/build.sh` after the change: *11629 strings — 0 uncovered · 0 unsourced*, *check_shape: OK (115 assertions)*, and `data/` byte-identical (`sha256sum -c`: 0 of 12 differ). The fixture layer (`build/fixtures/layer/`, one Loremaster Character on the corpus's type and a sidebar that CONCERNS by hash and by name) builds to a scratch folder: *strings 15 (19 occurrences) — 0 / 0 / 0*; *ids: 1, none of them the corpus's (3027)*; *references: 3 ids, every one resolves*; *names: 1 … every one names an entity*. Each gate made to fail, exit 1: the type hash mistyped → *REFERENCES … #TOR003000000000X*; the entity on Adelard Took's id → *IDS … #t3UnKskmGKqSuit6WkUHPLc*; `^"Aew"` → *NAMES … 'Aew'*; a sentence replaced in the built data → it is uncovered and the invented one unsourced. In the browser on 8741 with no instance declared: the site titled *The One Ring — the books*, 7 tabs, 9 books on the shelf; `/gm/` titled *The One Ring — the Loremaster’s table*, 10 panels; the map table and the player's page titled and branded as before; each page carries its two stage tags; no console errors but a stored session's socket to the stopped Worker. The instance side is proven in Banes of Beleriand's own plan |
+
+| # | Decision | Why |
+|---|---|---|
+| I-1 | An instance declares its scripts in `engine/config.js` (`instance: {styles, stages}`); upstream's config documents the key and sets it to `null` | As l5r5e I-1. |
+| I-2 | `build_layer.py` is this repo's own: it builds a layer with `build_data.py`'s `collect_entities` / `chapter_body` / `records_of`, the records BY the BASE's declared types read from `data/index.js`, so a layer's Adversary or Loremaster Character is listed wherever the corpus's are | l5r5e's builder walks a different data shape; only the gates' rules are shared. |
+| I-3 | The layer's string gate counts (`strings_of`, split out of `verify_data.py`'s `corpus_strings` unchanged), as l5r5e's does; the books' own gate stays presence-only | A layer is small and hand-written, where a dropped repeat is likeliest. |
+| I-4 | The names gate reads every `{hash: null, name}` reference the build writes (a CONCERNS entry, a list item, a REF field given by name); the references gate also admits an arc's SCENE / LOCATION block ids | This corpus hashes every entity, so a by-name reference is rarer than in l5r5e, but a layer may still write one. |
+| I-5 | Not ported: l5r5e's I-9 (the campaign layer loads with every book) | This corpus has no `MODIFY` and this VTT shows no corrections beside their targets; a house rule here would need that first. |
+
 ## STOPPED HERE — to resume
 
 **M0–M5 landed 2026-09-23**, each committed and pushed. Nothing is deployed and the repo is
