@@ -1,0 +1,49 @@
+/* campaign/site/campaign.css — Banes of Beleriand's pages, in the VTT's own tokens
+   (assets/css/tor2e.css): the campaign's tabs and its Loremaster's panel. */
+
+.banes-hint { font-family: var(--font-ui); font-style: normal; font-size: 13px; letter-spacing: .03em; }
+.banes-card { border-left-color: var(--red); min-height: 96px; }
+.banes-home-body { margin: 0 auto 26px; }
+
+/* prose from campaign/docs */
+.banes-prose h1, .banes-prose h2, .banes-prose h3 { font-family: var(--font-display); color: var(--red); font-weight: 600; line-height: 1.2; letter-spacing: .02em; }
+.banes-prose h1 { font-size: 30px; margin: 0 0 12px; }
+.banes-prose h2 { font-size: 24px; margin: 26px 0 8px; }
+.banes-prose h3 { font-size: 19px; margin: 20px 0 6px; color: var(--ink); }
+.banes-prose blockquote { margin: 14px 0; padding: 4px 18px; border-left: 3px solid var(--gold); color: var(--ink-2); font-style: italic; }
+.banes-prose hr { border: 0; text-align: center; margin: 22px 0; }
+.banes-prose hr::after { content: '⁂'; color: var(--gold); font-size: 20px; }
+.banes-prose table { border-collapse: collapse; margin: 12px 0; }
+.banes-prose th, .banes-prose td { border-bottom: 1px solid var(--rule); padding: 5px 12px 5px 0; text-align: left; vertical-align: top; }
+.banes-prose th { font-family: var(--font-ui); font-size: 14px; letter-spacing: .06em; color: var(--red); }
+.banes-prose img { max-width: 100%; height: auto; }
+.banes-prose a.doc-link { color: var(--red); text-decoration: none; border-bottom: 1px dotted var(--red); }
+/* the ledger: a chapter's mechanics, footnoted out of the prose */
+.banes-prose .footnote { margin-top: 30px; padding-top: 8px; border-top: 1px solid var(--rule); font-size: 15.5px; color: var(--ink-2); }
+.banes-prose .footnote::before { content: 'Ledger'; display: block; font-family: var(--font-ui); font-size: 13px; letter-spacing: .12em; color: var(--red); margin-bottom: 4px; }
+.banes-prose .footnote hr { display: none; }
+.banes-prose sup a.footnote-ref { color: var(--red); text-decoration: none; }
+
+/* the Chronicle */
+.banes-part { font-size: 13px; }
+.banes-paging { display: flex; justify-content: space-between; gap: 18px; }
+ol.banes-toc, ul.banes-toc { font-size: 19px; line-height: 1.6; }
+ol.banes-toc a, ul.banes-toc a { color: var(--ink); text-decoration: none; }
+ol.banes-toc a:hover, ul.banes-toc a:hover { color: var(--red); }
+
+/* people */
+.banes-person { display: flex; gap: 12px; align-items: flex-start; }
+.banes-thumb { width: 56px; height: 56px; object-fit: cover; border-radius: 50%; border: 2px solid var(--gold); flex: none; }
+.banes-portrait { float: right; width: min(260px, 40%); margin: 0 0 14px 22px; border: 1px solid var(--rule); box-shadow: 0 4px 14px rgba(60,40,10,.18); }
+.banes-person-page::after { content: ''; display: block; clear: both; }
+.banes-sheet, .banes-statblock { margin-top: 22px; }
+.banes-sheet { max-width: 1100px; }
+
+/* Behind the Veil (the Loremaster's panel) */
+.banes-gate { padding: 12px 0; }
+.banes-veil-doc { margin: 8px 0; border: 1px solid var(--rule); background: var(--parch); padding: 6px 12px; }
+.banes-veil-doc > summary { cursor: pointer; font-family: var(--font-display); font-weight: 600; color: var(--red); }
+
+@media (max-width: 720px) {
+  .banes-portrait { float: none; display: block; width: 100%; margin: 0 0 14px; }
+}

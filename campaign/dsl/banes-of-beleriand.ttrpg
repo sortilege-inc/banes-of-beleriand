@@ -1,0 +1,11 @@
+EXTENSION "banes-of-beleriand" EXTENDS "tor2e" {
+    NAME "Banes of Beleriand"
+    VERSION "0.1.0"
+    SPEC_VERSION "0.5"
+    RELEASE_DATE "2026-09-23"
+
+    # The campaign's homebrew layer: its Loremaster characters, adversaries, and anything else
+    # that must pass the gate, written as the corpus writes them (EXTENDS a BASE type by hash,
+    # e.g. #TOR0030000000000 ^"Loremaster Character", #TOR0020000000000 ^"Adversary").
+    # Built by: bash build/build_layer.sh campaign/dsl campaign "Banes of Beleriand" campaign/data
+}
