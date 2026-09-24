@@ -118,8 +118,38 @@ window.TorCombat = (function () {
   const highestProficiency = (v) => Math.max(0, ...(v['Combat Proficiencies'] || []).map((p) => p.Rank || 0));
   const ratingFor = (v, w) => (brawling(w) ? highestProficiency(v) : ((v['Combat Proficiencies'] || []).find((p) => p.Skill === w.prof) || {}).Rank || 0);
   const parryOf = (r) => parseInt(String(f(r, 'Parry') || '0').replace('+', ''), 10) || 0;
-  const grips = {};   // member id + weapon → '1h' | '2h' (a weapon "Can be used 1 or 2-handed"): the player's choice, kept across redraws
-  const gripOf = (m, w) => (w.either ? grips[m.id + '|' + w.name] || '1h' : w.twoHanded ? '2h' : '1h');
+  // The grip is declared, and kept with the hero (`live.grips`, weapon → '1h' | '2h'): a weapon printed
+  // "Can be used 1 or 2-handed" is held as declared (one hand until declared otherwise); one printed
+  // "2-handed" always takes two. The grip sets the Injury (the table's "16 (1h)/18 (2h)") and Heavy
+  // Blow's "+1 if you are using a 2-handed weapon".
+  const gripOf = (m, w) => (w.either ? (((m.live || {}).grips || {})[w.name] || '1h') : w.twoHanded ? '2h' : '1h');
+  function setGrip(m, w, g) {
+    const mm = memberNow(m);
+    if (!w.either || gripOf(mm, w) === g) return;
+    State().commit('setPartyLive', [mm.id, { grips: Object.assign({}, (mm.live || {}).grips || {}, { [w.name]: g }) }]);
+    Sheet().logEvent(mm, 'Grips the ' + w.name + (g === '2h' ? ' two-handed' : ' one-handed'), 'grip');
+  }
+  // the declaration, wherever the hero's weapons are listed: two buttons for a weapon that may be
+  // held either way, the fixed grip named for one that may not; a shield named beside a 2-handed grip
+  function gripControl(m, w) {
+    const v = Sheet().complete(memberNow(m).character || {});
+    const g = gripOf(memberNow(m), w);
+    const shield = w.either && v.Shield && v.Shield.hash && g === '2h' ? el('span', { class: 'muted small grip-note' }, [' both hands on the ' + w.name + ' — the ' + v.Shield.name + ' is not in hand']) : null;
+    if (!w.either) return el('span', { class: 'grip' }, [el('span', { class: 'grip-fixed muted small' }, [w.twoHanded ? '2-handed' : '1-handed']), shield]);
+    return el('span', { class: 'grip' }, [
+      button('1h', () => setGrip(m, w, '1h'), 'toggle' + (g === '1h' ? ' on' : '')),
+      button('2h', () => setGrip(m, w, '2h'), 'toggle' + (g === '2h' ? ' on' : '')),
+      shield,
+    ]);
+  }
+  // a scene's foes as targets: the foe's id, its label ("Orc Soldier 2"), its record's printed fields
+  function foesIn(sid) {
+    const F = window.TorFoes;
+    if (!F) return [];
+    return F.list(sid).map((x) => { const r = F.recOf(x) || {}; return { id: x.id, sid, rec: x.rec, name: F.label(sid, x), fields: r.fields || {}, out: !!x.out, weary: F.isWeary(x), wounded: !!x.wounded || (x.wounds || 0) > 0 }; });
+  }
+  // the hit lands on the foe: its Endurance, and a Piercing Blow for the Loremaster's Protection roll
+  const strike = (m, a, loss, piercing) => { if (a.target && a.target.sid && window.TorFoes) window.TorFoes.hit(a.target.sid, a.target.id, loss, piercing ? { piercing, by: m.name } : null); };
   const lastAttack = {};   // member id → the last attack's outcome, for its Success-icon spends
   const blows = {};        // member id → { loss, injury } being entered for a blow taken
 
@@ -169,6 +199,7 @@ window.TorCombat = (function () {
   function afterAttack(m, a) {
     if (!a.r.ok) { Sheet().logEvent(m, 'Misses' + (a.target ? ' ' + a.target.name : ''), 'attack'); return; }
     const o = outcome(m, a);
+    strike(m, a, o.loss, o.piercing ? o.injury : null);
     Sheet().logEvent(m, 'Hits' + (a.target ? ' ' + a.target.name : '') + ': Endurance loss ' + o.loss + ' (the ' + a.w.name + '’s Damage)' + (o.piercing ? ' · a Piercing Blow — Protection against Injury ' + o.injury : '') + (a.r.icons ? ' · ' + a.r.icons + ' [Success] to spend' : ''), 'attack');
   }
   function spend(m, name) {
@@ -178,6 +209,9 @@ window.TorCombat = (function () {
     if (!before.options.some((x) => x.name === name)) return;
     a.spent.push(name);
     const o = outcome(m, a);
+    // what the spend adds lands on the foe too: a Heavy Blow's Endurance, a Pierce's Piercing Blow
+    if (name === 'Heavy Blow') strike(m, a, o.loss - before.loss, null);
+    if (name === 'Pierce' && o.piercing && !before.piercing) strike(m, a, 0, o.injury);
     const what = before.options.find((x) => x.name === name).gives;
     Sheet().logEvent(memberNow(m), 'spends 1 [Success]: ' + name + ' (' + what + ')' + (name === 'Heavy Blow' ? ' — Endurance loss ' + o.loss : '') + (name === 'Pierce' && o.piercing && !before.piercing ? ' — a Piercing Blow: Protection against Injury ' + o.injury : ''), 'attack');
     window.VttBus.emit('state:remote', { view: true }, { local: true });
@@ -270,12 +304,15 @@ window.TorCombat = (function () {
       if (st) box.appendChild(el('div', { class: 'small stance-rule', html: E.inline(text(st)).replace(/\n\n/g, '<br>') }));
     }
     // engagement: adversaries from the scene
+    // engagement: the scene's foes, each one tracked (system/tor2e/foes.js); a foe taken out of the
+    // fight is no longer offered and no longer engaged
     const sid = Sys() && Sys().currentSceneId ? Sys().currentSceneId() : null;
-    const here = sid && Sys().cast ? Sys().cast(sid).filter((r) => r.type === 'Adversary') : [];
-    const engaged = (c.engaged || []).map((id) => D.record(id)).filter(Boolean);
+    const all = sid ? foesIn(sid) : [];
+    const here = all.filter((x) => !x.out);
+    const engaged = (c.engaged || []).map((id) => all.find((x) => x.id === id)).filter((x) => x && !x.out);
     // at close quarters a hero attacks one of those engaged with them; shooting, any adversary
     const shooting = volley || c.stance === 'Rearward';
-    const target = shooting ? D.record(c.target) : (engaged.find((r) => r.id === c.target) || engaged[0] || null);
+    const target = shooting ? here.find((x) => x.id === c.target) || null : (engaged.find((r) => r.id === c.target) || engaged[0] || null);
     if (!shooting) {
       const pick = el('select', { class: 'scope', 'aria-label': 'Engage an adversary' }, [el('option', { value: '' }, [here.length ? 'Engage an adversary…' : 'No adversary in this scene'])].concat(here.filter((r) => (c.engaged || []).indexOf(r.id) === -1).map((r) => el('option', { value: r.id }, [r.name]))));
       pick.addEventListener('change', () => {
@@ -284,12 +321,13 @@ window.TorCombat = (function () {
         const mm = memberNow(m);
         const cc = combatOf(mm);
         State().commit('setPartyLive', [mm.id, { combat: Object.assign({}, cc, { engaged: (cc.engaged || []).concat([pick.value]), target: cc.target || pick.value }) }]);
-        Sheet().logEvent(mm, 'Engages ' + (D.record(pick.value) || {}).name, 'combat');
+        Sheet().logEvent(mm, 'Engages ' + ((here.find((x) => x.id === pick.value) || {}).name || ''), 'combat');
       });
       box.appendChild(el('div', { class: 'track-name' }, ['Engaged', el('span', { class: 'muted small' }, [' · ', cite(RULES.engagement)])]));
       box.appendChild(el('div', { class: 'engaged' }, [pick, engaged.map((r) => el('div', { class: 'engaged-foe' + (target && target.id === r.id ? ' target' : '') }, [
         el('button', { class: 'ref', type: 'button', title: 'Attack this one', onclick: () => { const mm = memberNow(m); State().commit('setPartyLive', [mm.id, { combat: Object.assign({}, combatOf(mm), { target: r.id }) }]); } }, [r.name]),
         el('span', { class: 'muted small' }, [' AL ' + f(r, 'Attribute Level') + ' · Parry ' + (f(r, 'Parry') || '—') + ' · Armour ' + (f(r, 'Armour') || '—')]),
+        r.weary ? el('span', { class: 'cond on' }, ['Weary']) : null, r.wounded ? el('span', { class: 'cond on' }, ['Wounded']) : null,
         button('×', () => { const mm = memberNow(m); const cc = combatOf(mm); const left = (cc.engaged || []).filter((x) => x !== r.id); State().commit('setPartyLive', [mm.id, { combat: Object.assign({}, cc, { engaged: left, target: cc.target === r.id ? left[0] || null : cc.target }) }]); Sheet().logEvent(mm, 'No longer engaged with ' + r.name, 'combat'); }, 'ghost tiny'),
       ]))]));
     } else if (here.length) {
@@ -309,7 +347,7 @@ window.TorCombat = (function () {
       const tn = Sheet().tn(v, 'Strength');
       return el('div', { class: 'cw-row' }, [
         button('Attack with the ' + w.name, () => attack(m, w, target), 'btn' + (needStance ? ' disabled' : '')),
-        w.either ? el('span', { class: 'grip' }, ['1h', '2h'].map((g) => button(g, () => { grips[m.id + '|' + w.name] = g; redraw(); }, 'toggle' + (gripOf(m, w) === g ? ' on' : '')))) : null,
+        gripControl(m, w),
         el('span', { class: 'muted small' }, [' ' + ratingFor(v, w) + 'd' + (brawling(w) ? ' (Brawling: highest proficiency, lose (1d))' : '') + ' · TN ' + (tn == null ? '—' : tn + (target ? parryOf(target) : 0)) + ' · Damage ' + w.damage + ' · Injury ' + ((gripOf(m, w) === '2h' ? w.injury2 : w.injury1) || '—')]),
       ]);
     })) : el('div', { class: 'muted small' }, [ranged ? 'No bow or thrown weapon on the sheet.' : 'No close combat weapon on the sheet.']));
@@ -350,5 +388,5 @@ window.TorCombat = (function () {
     return box;
   }
 
-  return { RULES, STANCES, BRAWLING_ENTRY, combatOf, start, nextRound, end, companyBlock, pane, attack, weaponOf, ratingFor, outcome, spend, takeBlow, protection, wound, taskOf, performTask, lastAttack };
+  return { gripOf, setGrip, gripControl, RULES, STANCES, BRAWLING_ENTRY, combatOf, start, nextRound, end, companyBlock, pane, attack, weaponOf, ratingFor, outcome, spend, takeBlow, protection, wound, taskOf, performTask, lastAttack };
 })();

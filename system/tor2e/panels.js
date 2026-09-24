@@ -48,6 +48,9 @@
     State.commit('setCampaign', [{ modules: [cid].concat(rest) }]);
   }
   function putIn(sceneId, recordId) {
+    // an adversary joins as a foe of its own, tracked (system/tor2e/foes.js); anyone else by record
+    const rec = D.record(recordId);
+    if (rec && rec.type === 'Adversary' && window.TorFoes) return window.TorFoes.add(sceneId, recordId, 1);
     const ids = ((S().cast || {})[sceneId] || []).slice();
     if (ids.indexOf(recordId) === -1) ids.push(recordId);
     State.commit('setSceneCast', [sceneId, ids]);
@@ -101,11 +104,14 @@
           button('Open on the table', () => window.open(window.VttConfig.pages.table + '?scene=' + encodeURIComponent(cur), (window.VttConfig.channel || 'vtt') + '-table'), 'tiny'),
           el('label', { class: 'small' }, [el('input', { type: 'checkbox', checked: st.done || null, onchange: (ev) => State.commit('setSceneDone', [a.id, cur, ev.target.checked]) }), ' done']),
         ]));
+        box.appendChild(window.TorFoes.block(cur));
         box.appendChild(el('div', { class: 'prop-k' }, ['In it']));
         box.appendChild(here.length ? el('div', { class: 'chiprow tight' }, here.map((r) => el('span', { class: 'chip' }, [
           el('button', { class: 'ref', type: 'button', onclick: () => Panels.select({ kind: 'entity', id: r.id }) }, [r.name]),
+          // an adversary put here before foes were tracked one by one: make it a tracked foe
+          r.type === 'Adversary' ? el('button', { class: 'ref tiny', type: 'button', title: 'track it: Endurance, Hate, Wounds', onclick: () => { takeOut(cur, r.id); window.TorFoes.add(cur, r.id, 1); } }, ['track']) : null,
           el('button', { class: 'ref tiny', type: 'button', title: 'take out', onclick: () => takeOut(cur, r.id) }, ['×']),
-        ]))) : el('div', { class: 'muted small' }, ['No one yet. Adversaries and Loremaster characters can be put here from their panels or the Inspector.']));
+        ]))) : (window.TorFoes.list(cur).length ? null : el('div', { class: 'muted small' }, ['No one yet. Adversaries and Loremaster characters can be put here from their panels or the Inspector.'])));
         if (named.length) box.appendChild(el('div', { class: 'chiprow tight' }, [el('span', { class: 'muted small' }, ['The adventure’s cast:'])].concat(named.map((r) => button('+ ' + r.name, () => putIn(cur, r.id), 'ghost tiny')))));
         box.appendChild(el('div', { class: 'prop-k' }, ['Loremaster’s notes', el('span', { class: 'muted' }, [' · never sent to players'])]));
         box.appendChild(el('textarea', { class: 'text', rows: 5, placeholder: 'What happens here…', oninput: debounce((ev) => State.commit('setSceneNotes', [a.id, cur, ev.target.value]), 400) }, [st.notes || '']));

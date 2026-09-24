@@ -598,7 +598,7 @@ window.TorSheet = (function () {
       const wo = C.weaponOf(w);
       const rank = C.ratingFor(v, wo);
       return el('div', { class: 'rated-row' }, [
-        el('span', { class: 'rated-main' }, [el('button', { class: 'ref', type: 'button', onclick: () => window.TorOpenEntity && window.TorOpenEntity(w.hash) }, [w.name]), el('span', { class: 'muted small' }, [' ' + weaponLine(w) + ' · ' + (wo.prof || '') + ' ' + rank + (wo.prof === 'Brawling' ? ' (highest proficiency, lose (1d))' : '')])]),
+        el('span', { class: 'rated-main' }, [el('button', { class: 'ref', type: 'button', onclick: () => window.TorOpenEntity && window.TorOpenEntity(w.hash) }, [w.name]), el('span', { class: 'muted small' }, [' ' + weaponLine(w) + ' · ' + (wo.prof || '') + ' ' + rank + (wo.prof === 'Brawling' ? ' (highest proficiency, lose (1d))' : '')]), ' ', C.gripControl(m, wo)]),
         C.combatOf(m) ? null : button('Attack', () => C.attack(m, wo, null, { hope: hopeOn() }), 'tiny'),
       ]);
     })) : el('div', { class: 'muted small' }, ['No war gear on the sheet.']));

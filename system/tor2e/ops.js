@@ -23,6 +23,39 @@
     s.cast[sceneId] = (ids || []).slice();
   });
 
+  // The adversaries of a scene, each one tracked (system/tor2e/foes.js):
+  //   foes { [sceneId]: [{ id, rec, n, endurance, hate, wounds, weary, out, pierced }] }
+  // Players see who is there and who is down, never the numbers: the room forwards every foe op to
+  // them as the scene's list with Endurance, Hate and Wounds taken out.
+  Ops.shared(['foes']);
+  const foeView = (f) => ({ id: f.id, rec: f.rec, n: f.n, out: !!f.out, weary: !!f.weary || f.hate === 0, wounded: (f.wounds || 0) > 0 });
+  const foesFor = (s, sceneId) => ({ name: 'setFoes', args: [sceneId, ((s.foes || {})[sceneId] || []).map(foeView)] });
+  Ops.playerFilter((doc) => {
+    if (doc.foes) Object.keys(doc.foes).forEach((k) => { doc.foes[k] = (doc.foes[k] || []).map(foeView); });
+    return doc;
+  });
+  const foe = (s, sceneId, id) => ((s.foes || {})[sceneId] || []).find((x) => x.id === id);
+  Ops.register('setFoes', (s, sceneId, list) => {
+    if (!s.foes) s.foes = {};
+    s.foes[sceneId] = (list || []).map((x) => Object.assign({}, x));
+  }, null, (s, a) => foesFor(s, a[0]));
+  Ops.register('patchFoe', (s, sceneId, id, patch) => {
+    const f = foe(s, sceneId, id);
+    if (f && patch) Object.assign(f, patch);
+  }, null, (s, a) => foesFor(s, a[0]));
+  // a hero's hit: its Endurance loss, and a Piercing Blow awaiting the foe's Protection roll. Any
+  // player may send it for their own attack; "All adversaries are taken out of combat if their
+  // Endurance is reduced to zero" (Might and Endurance)
+  Ops.register('hitFoe', (s, sceneId, id, loss, extra) => {
+    const f = foe(s, sceneId, id);
+    if (!f) return;
+    if (typeof f.endurance === 'number') {
+      f.endurance = Math.max(0, f.endurance - (Number(loss) || 0));
+      if (f.endurance === 0) f.out = true;
+    }
+    if (extra && extra.piercing) f.pierced = { injury: extra.piercing, by: extra.by || null };
+  }, (s, me) => !!me, (s, a) => foesFor(s, a[0]));
+
   // A hero's archived versions: a copy of the character and its live state, appended, never
   // edited. A player may archive their own hero.
   Ops.register('archivePartyVersion', (s, id, version) => {

@@ -336,3 +336,15 @@ body.advancing .pane-nav { display: none !important; }
 @media (max-width: 640px) {
   body.play .sheet.live details > summary { min-height: 44px; display: flex; align-items: center; }
 }
+/* grips and the foe tracker */
+.grip { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.grip-note { flex-basis: 100%; }
+.foes { margin: 6px 0; }
+.foe-row { border: 1px solid var(--rule); background: var(--parch); padding: 4px 8px; margin: 4px 0; }
+.foe-row.out { opacity: .55; }
+.foe-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.foe-count { display: inline-flex; align-items: center; gap: 2px; margin-right: 6px; }
+.foe-k { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); margin-right: 2px; }
+.foe-v { min-width: 2.6em; text-align: center; font-family: var(--font-display); }
+.foe-pierced { border-top: 1px dotted var(--red); margin-top: 4px; padding-top: 4px; color: var(--red); }
+@media (max-width: 640px) { body.play .grip .toggle { min-width: 56px; } }

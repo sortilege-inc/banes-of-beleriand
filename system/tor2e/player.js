@@ -139,7 +139,8 @@ window.TorPlayer = (function () {
     const C = Combat();
     const rows = (v['War Gear'] || []).filter((x) => x && x.hash).map((w) => {
       const wo = C.weaponOf(w);
-      return el('div', { class: 'gear-row' }, [el('b', {}, [w.name]), el('span', { class: 'muted small' }, [[wo.prof + ' ' + C.ratingFor(v, wo) + 'd', 'Damage ' + wo.damage, 'Injury ' + (wo.either ? wo.injury1 + ' / ' + wo.injury2 + ' (2h)' : (wo.injury1 || '—')), 'Load ' + (D.f(wo.record, 'Load') || 0)].join(' · ')])]);
+      const g = C.gripOf(memberNow(m), wo);
+      return el('div', { class: 'gear-row' }, [el('b', {}, [w.name]), el('span', { class: 'muted small' }, [[wo.prof + ' ' + C.ratingFor(v, wo) + 'd', 'Damage ' + wo.damage, 'Injury ' + ((g === '2h' ? wo.injury2 : wo.injury1) || '—') + (wo.either ? ' (' + g + ')' : ''), 'Load ' + (D.f(wo.record, 'Load') || 0)].join(' · ')]), C.gripControl(m, wo)]);
     });
     const piece = (k) => (v[k] && v[k].hash ? el('div', { class: 'gear-row' }, [el('b', {}, [v[k].name]), el('span', { class: 'muted small' }, [[D.f(S.recordOf(v[k]), 'Protection') ? 'Protection ' + D.f(S.recordOf(v[k]), 'Protection') : null, D.f(S.recordOf(v[k]), 'Parry Modifier') != null ? 'Parry +' + D.f(S.recordOf(v[k]), 'Parry Modifier') : null, 'Load ' + (D.f(S.recordOf(v[k]), 'Load') || 0)].filter(Boolean).join(' · ')])]) : null);
     const l = S.current(m);

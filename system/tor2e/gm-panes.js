@@ -188,7 +188,8 @@
       const sc = Sys().scene && Sys().scene(Sys().currentSceneId());
       container.appendChild(el('div', { class: 'chiprow tight' }, [
         button('Save encounter', () => { if (!draft.adversaries.length) return; const l = encounters(); const nm = draft.name.trim() || ('Encounter ' + (l.length + 1)); l.push({ id: newId('enc'), name: nm, adversaries: draft.adversaries.map((n) => ({ id: n.id, count: n.count })) }); setEncounters(l); }, 'tiny'),
-        sc && draft.adversaries.length ? button('Put in ' + sc.name, () => { const cur = Sys().cast(sc.id).map((r) => r.id); State.commit('setSceneCast', [sc.id, cur.concat(draft.adversaries.map((n) => n.id).filter((id) => cur.indexOf(id) === -1))]); }, 'ghost tiny') : null,
+        // every one of them a foe of its own, tracked (system/tor2e/foes.js)
+        sc && draft.adversaries.length ? button('Put in ' + sc.name, () => draft.adversaries.forEach((n) => window.TorFoes.add(sc.id, n.id, n.count)), 'ghost tiny') : null,
         draft.adversaries.length ? button('Clear', () => { draft = { name: '', adversaries: [] }; draw(); }, 'ghost tiny') : null,
       ]));
       const saved = encounters();
@@ -201,7 +202,8 @@
       // who is in the current scene of the adventure
       container.appendChild(el('h4', {}, ['In this scene', el('span', { class: 'muted small', html: sc ? ' · ' + E.inline(sc.name) : ' · no scene' })]));
       const here = sc ? Sys().cast(sc.id) : [];
-      container.appendChild(here.length ? el('ul', { class: 'items' }, here.map((r) => el('li', {}, [
+      if (sc) container.appendChild(window.TorFoes.block(sc.id));
+      container.appendChild(here.length || (sc && window.TorFoes.list(sc.id).length) ? el('ul', { class: 'items' }, here.map((r) => el('li', {}, [
         el('button', { class: 'ref', type: 'button', onclick: () => open(r.id) }, [r.name]),
         el('span', { class: 'muted small' }, [' ' + (r.type === 'Adversary' ? advLine(r) : (f(r, 'Occupation') || r.type))]),
       ]))) : el('div', { class: 'muted small' }, ['No one yet — the Adversaries panel, or an encounter’s “Put in”, adds them.']));
