@@ -1,7 +1,7 @@
 # sortilege-vtt-tor2e — plan and decision log
 
 A virtual tabletop for **The One Ring, Second Edition** (Free League), built on the Titterpig
-corpus `titterpig-dsl-tor2e/0.5`. Its shape follows `sortilege-vtt-teeth`'s `PLAYBOOK.md`, with
+corpus `titterpig-dsl-tor2e/0.5`. Its shape follows `PLAYBOOK.md` (in `~/Sortilege/VTT/`, beside the VTT repos), with
 Troika!'s adventure-and-bestiary pattern and VtM5e's lazily loaded shelf of books. All three
 repos are read-only reference; nothing in them is modified here. Eighth in the line after
 Wyldwolf Axis, NOVA Open, City of Winter, TEETH, Invisible Sun, Troika! and VtM5e.
