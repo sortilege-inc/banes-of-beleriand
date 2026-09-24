@@ -560,6 +560,8 @@ window.TorSheet = (function () {
       box.appendChild(render(av, null));
       return box;
     }
+    // the player's copy: compact, in tabs on a phone (system/tor2e/player.js)
+    if (o.player && window.TorPlayer) return window.TorPlayer.sheet(m, header, versionPicker(m, redraw, true));
     const v = complete(m.character || {});
     const l = live(m);
     const box = el('div', { class: 'sheet live' });

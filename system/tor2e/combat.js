@@ -121,6 +121,7 @@ window.TorCombat = (function () {
   const grips = {};   // member id + weapon → '1h' | '2h' (a weapon "Can be used 1 or 2-handed"): the player's choice, kept across redraws
   const gripOf = (m, w) => (w.either ? grips[m.id + '|' + w.name] || '1h' : w.twoHanded ? '2h' : '1h');
   const lastAttack = {};   // member id → the last attack's outcome, for its Success-icon spends
+  const blows = {};        // member id → { loss, injury } being entered for a blow taken
 
   function attack(m, w, target, opts) {
     const mm = memberNow(m);
@@ -250,6 +251,9 @@ window.TorCombat = (function () {
       el('h3', {}, [volley ? 'Opening volleys' : 'Round ' + c.round]),
       el('span', { class: 'muted small' }, ['Parry ' + (v.Parry == null ? '—' : v.Parry) + (v.Shield && v.Shield.hash ? ' · ' + v.Shield.name + ' +' + (f(Sheet().recordOf(v.Shield), 'Parry Modifier') || 0) + (volley ? ', doubled if aware' : '') : '') + ' · ', cite(RULES.sequence, 'the sequence')]),
     ]));
+    // the hero's latest roll, its dice drawn (an attack, a task or a Protection roll is rolled from here)
+    const last = Sheet().logOf(m).filter((x) => x.kind === 'roll').slice(-1)[0];
+    if (last) box.appendChild(el('div', { class: 'roll-line last-roll' + (last.ok ? ' ok' : last.ok === false ? ' fail' : '') }, [el('span', { class: 'roll-who' }, [last.label || 'a roll']), el('span', { class: 'roll-text', html: E.inline(last.text || '') })]));
     const hope = el('label', { class: 'check small' }, [el('input', { type: 'checkbox', checked: hopeFlags[m.id] || null, onchange: (ev) => { hopeFlags[m.id] = ev.target.checked; } }), ' spend 1 Hope on the next roll']);
     // the stance (close quarters only)
     if (!volley) {
@@ -329,16 +333,17 @@ window.TorCombat = (function () {
       box.appendChild(el('div', { class: 'track-name' }, ['Combat task', el('span', { class: 'muted small' }, [' · ', cite(RULES.tasks, 'the main action')])]));
       box.appendChild(el('div', {}, [b, el('details', { class: 'small' }, [el('summary', { class: 'muted' }, ['what it does']), el('div', { html: E.inline(t.entity.desc || '').replace(/\n\n/g, '<br>') })])]));
     }
-    // taking a blow
-    const loss = el('input', { class: 'text num small', type: 'number', min: 0, placeholder: 'loss', 'aria-label': 'Endurance loss' });
-    const inj = el('input', { class: 'text num small', type: 'number', min: 0, placeholder: 'Injury', 'aria-label': 'Injury' });
-    const n = () => parseInt(loss.value || '0', 10) || 0;
+    // taking a blow: the loss and the Injury tapped in, not typed (kept across redraws)
+    const blow = blows[m.id] || (blows[m.id] = { loss: 0, injury: 14 });
+    const count = (label, key, lo) => el('span', { class: 'count' }, [el('span', { class: 'count-k' }, [label]),
+      button('−', () => { blow[key] = Math.max(lo, blow[key] - 1); redraw(); }, 'ghost tiny step'), el('b', { class: 'count-v' }, [String(blow[key])]), button('+', () => { blow[key] += 1; redraw(); }, 'ghost tiny step')]);
     const knockedThisRound = c.knockedBack != null && c.knockedBack === c.round;
     box.appendChild(el('div', { class: 'track-name' }, ['Hit', el('span', { class: 'muted small' }, [' · ', cite(RULES.enduranceLoss), ' · ', cite(RULES.piercing)])]));
-    box.appendChild(el('div', { class: 'chiprow tight take-blow' }, [
-      loss, button('Take it', () => { if (n()) takeBlow(m, n(), false); }, 'ghost tiny'),
-      button('Knocked back (half)', () => { if (n()) takeBlow(m, n(), true); }, 'ghost tiny' + (knockedThisRound || volley ? ' disabled' : '')),
-      inj, button('Piercing Blow: Protection', () => { const x = parseInt(inj.value || '', 10); if (x) protection(m, x); }, 'ghost tiny'),
+    box.appendChild(el('div', { class: 'take-blow' }, [
+      el('div', { class: 'chiprow tight' }, [count('Endurance loss', 'loss', 0),
+        button('Take it', () => { const n = blow.loss; blow.loss = 0; if (n) takeBlow(m, n, false); }, 'ghost tiny'),
+        button('Knocked back (half)', () => { const n = blow.loss; blow.loss = 0; if (n) takeBlow(m, n, true); }, 'ghost tiny' + (knockedThisRound || volley ? ' disabled' : ''))]),
+      el('div', { class: 'chiprow tight' }, [count('Injury', 'injury', 1), button('Piercing Blow: Protection', () => protection(m, blow.injury), 'ghost tiny')]),
     ]));
     if (knockedThisRound || volley) box.querySelectorAll('.take-blow button.disabled').forEach((b) => { b.disabled = true; b.title = volley ? 'Knockback is a close quarters rule' : 'Once each round'; });
     void o;
