@@ -178,9 +178,13 @@ built here, on branch `instance-hooks`, ported from l5r5e's I1 and I-8:
 
 ## STOPPED HERE — to resume
 
-**M0–M5 landed 2026-09-23**, each committed and pushed. Nothing is deployed and the repo is
-private (D3, owner). The corpus gained `ACTOR "Player-hero"` (`a6fad20`) and a defect report
+**M0–M5 landed 2026-09-23; T1–T4 (the family's newer work, above) 2026-09-24**, each committed and
+pushed. Nothing is deployed and the repo is private (D3, owner). The corpus gained `ACTOR "Player-hero"` (`a6fad20`) and a defect report
 (`c00634e`).
+
+An instance pulls T1–T4 with `git fetch upstream && git merge upstream/main` (Banes of Beleriand:
+its `engine/config.js` keeps its own copy under `merge=ours`, and upstream added only comments there).
+The Worker imports `system/tor2e/ops.js`; a deployed Worker must be redeployed for T1–T4's new ops.
 
 To resume: `bash build/build.sh` (gates green); start the launch entry `vtt-tor2e` (8741) and open
 `/` and `/gm/`. For sessions, also `vtt-tor2e-worker` (8793; `worker/` has `node_modules`), or
