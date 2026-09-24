@@ -22,7 +22,7 @@
   // the rules the encounter summary quotes, each the entity that prints it
   const RULES = {
     engagement: { id: '#t3vqihlHUUsdsRQrY8zPXlU', name: 'Engagement' },
-    rearward: { id: '#tj0N5sFY3yitGktrXKknpBs', name: 'Rearward Stance (Ranged Combat)' },   // a GUIDANCE entry on Engagement
+    rearward: { entry: '#tj0N5sFY3yitGktrXKknpBs', title: 'Rearward Stance (Ranged Combat)' },   // a GUIDANCE entry on Engagement, not an entity
   };
   const REARWARD_MULTIPLE = 2;   // RULES.rearward: "only if the total number of enemies isn’t more than twice the number of adventurers"
 
@@ -101,7 +101,7 @@
     const eng = D.entity(RULES.engagement.id);
     const paras = eng && eng.desc ? String(eng.desc).split(/\n\n/) : [];
     const steps = ((eng && (eng.props || []).find((p) => p.name === 'Steps')) || { items: [] }).items.map((x) => x.value);
-    const g = eng && (eng.guidance || []).find((x) => x.id === RULES.rearward.id);
+    const g = eng && (eng.guidance || []).find((x) => x.id === RULES.rearward.entry);
     const rear = g ? String(g.text).replace(/\n\n(?=[a-z])/g, ' ').split(/\n\n/).find((p) => /^Player-heroes are allowed to assume a Rearward stance/.test(p)) : null;
     return {
       more: paras.find((p) => /^\*\*MORE ENEMIES THAN PLAYER-HEROES/.test(p)) || null,

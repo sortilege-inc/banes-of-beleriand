@@ -170,3 +170,18 @@ body.play { display: block; background: var(--parch-2); }
   .play-menu > summary::after { content: '⋯'; font-size: 20px; color: var(--muted); }
   .play-menu .play-bar { display: grid; grid-template-columns: 1fr; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
 }
+
+/* ── the record (system/tor2e/sheet.js): versions, experience, the hero's log, the Company's bookkeeping ── */
+.sheet-headline { display: flex; gap: 12px; align-items: flex-start; }
+.sheet-headline .portrait { width: 72px; height: 72px; object-fit: cover; border: 1px solid var(--rule); }
+.sheet-headline .head-text { flex: 1; min-width: 0; }
+.archive-banner { background: var(--parch-3); border-left: 3px solid var(--gold); padding: 6px 10px; margin: 6px 0; font-size: 15px; }
+.sheet.archived { opacity: .92; }
+.track-name { font-family: var(--font-ui); font-size: 14px; letter-spacing: .05em; color: var(--ink-2); }
+.xp-row { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; margin: 4px 0; }
+.xp-row .track-name { min-width: 9em; }
+.soc { display: inline-flex; align-items: center; gap: 4px; font-size: 15px; }
+.xp-ledger { margin: 4px 0; font-size: 15px; }
+.roll-line.event .roll-who { color: var(--muted); }
+.hero-log { margin: 6px 0; }
+.bookkeeping .paper { margin: 6px 0; }

@@ -45,6 +45,14 @@
     if (adv.live) m.live = Object.assign({}, m.live || {}, adv.live);
   }, (s, me, a) => a[0] === me);
 
+  // A printed field of a hero changed by the rules outside advancement (Yule's "aged one year"):
+  // the Loremaster's to send.
+  Ops.register('patchPartyCharacter', (s, id, patch) => {
+    const m = (s.party || []).find((x) => x.id === id);
+    if (!m || !patch) return;
+    m.character = Object.assign({}, m.character || {}, patch);
+  });
+
   // The Loremaster's own pack state: free notes, the arc, open threads, saved encounters. Never
   // shared: no player may send them, none is in a player's view, and none is forwarded.
   const gmOnly = () => null;

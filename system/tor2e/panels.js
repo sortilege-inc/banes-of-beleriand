@@ -132,12 +132,42 @@
     });
     return el('span', {}, [button(label, () => file.click(), cls), file]);
   }
+  // The Company's bookkeeping between sessions (system/tor2e/sheet.js endSession / fellowship): the
+  // session's 3 Skill points and 3 Adventure points to each hero who attended; the Fellowship
+  // phase's Hope and the Shadow the Loremaster allows removed; Yule's.
+  let bookkeeping = null;   // 'session' | 'fellowship' — the form open, kept across redraws
+  function bookkeepingBlock(party) {
+    const box = el('div', { class: 'bookkeeping' });
+    box.appendChild(el('div', { class: 'chiprow tight' }, [
+      button('End the session…', () => { bookkeeping = bookkeeping === 'session' ? null : 'session'; Bus.emit('state:remote', { view: true }, { local: true }); }, 'ghost tiny'),
+      button('Fellowship phase…', () => { bookkeeping = bookkeeping === 'fellowship' ? null : 'fellowship'; Bus.emit('state:remote', { view: true }, { local: true }); }, 'ghost tiny'),
+    ]));
+    if (bookkeeping === 'session') {
+      const boxes = party.map((m) => ({ id: m.id, c: el('input', { type: 'checkbox', checked: true }) }));
+      box.appendChild(el('div', { class: 'paper small' }, [
+        el('div', {}, ['Each hero who attended earns ' + Sheet().SESSION_SKILL_POINTS + ' Skill points and ' + Sheet().SESSION_ADVENTURE_POINTS + ' Adventure points.']),
+        el('div', { class: 'chiprow tight' }, party.map((m, i) => el('label', { class: 'check' }, [boxes[i].c, ' ' + m.name]))),
+        button('End the session', () => { Sheet().endSession(boxes.filter((b) => b.c.checked).map((b) => b.id)); bookkeeping = null; Bus.emit('state:remote', { view: true }, { local: true }); }, 'tiny'),
+      ]));
+    }
+    if (bookkeeping === 'fellowship') {
+      const shadow = el('select', { class: 'scope tiny' }, [0, 1, 2, 3].slice(0, Sheet().SHADOW_REMOVED_MAX + 1).map((n) => el('option', { value: n }, [n ? 'remove ' + n + ' Shadow' : 'no Shadow removed'])));
+      const yule = el('input', { type: 'checkbox' });
+      box.appendChild(el('div', { class: 'paper small' }, [
+        el('div', {}, ['Every hero recovers Hope equal to HEART (all of it at Yule). At Yule each also earns Skill points equal to WITS and ages a year.']),
+        el('div', { class: 'chiprow tight' }, [shadow, el('label', { class: 'check' }, [yule, ' Yule'])]),
+        button('Apply to the Company', () => { Sheet().fellowship(party.map((m) => m.id), { shadow: parseInt(shadow.value, 10) || 0, yule: yule.checked }); bookkeeping = null; Bus.emit('state:remote', { view: true }, { local: true }); }, 'tiny'),
+      ]));
+    }
+    return box;
+  }
   function renderCompany(container, ctx) {
     const draw = () => {
       container.innerHTML = '';
       const party = S().party || [];
       container.appendChild(el('div', { class: 'chiprow' }, [characterLoader('Load Player-hero file(s)…', ''), el('span', { class: 'muted small' }, ['made on the site’s “Making a hero”'])]));
       if (!party.length) container.appendChild(el('div', { class: 'empty' }, ['No one in the Company yet.']));
+      else if (Sheet()) container.appendChild(bookkeepingBlock(party));
       party.forEach((m) => container.appendChild(el('div', { class: 'member' }, [
         el('button', { class: 'card static-card', type: 'button', onclick: () => Panels.select({ kind: 'party', id: m.id }) }, [
           el('div', { class: 'card-name' }, [m.name]),
