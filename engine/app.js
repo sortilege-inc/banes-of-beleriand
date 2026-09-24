@@ -162,4 +162,6 @@
 
   window.VttApp = { open, render, mode: () => mode };
   render();
+  // an instance's seed fills what its campaign has never had (engine/state.js seed); redraw if it did
+  State.seed().then((keys) => { if (keys.length) render(); }).catch((e) => window.console && console.warn('[vtt] seed: ' + e.message));
 })();

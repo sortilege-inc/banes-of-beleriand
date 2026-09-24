@@ -213,6 +213,9 @@ export class SessionRoom extends DurableObject<Env> {
           if (a.role === 'gm') return { type: 'op', name: msg.name, args: msg.args };
           return forPlayers ? { type: 'op', name: forPlayers.name, args: forPlayers.args } : null;
         }, ws);
+        // a player's op that players see as a different op (a hit on a foe arrives as the foes'
+        // player view): the sender gets that view too, or its copy keeps what it guessed
+        if (att.role !== 'gm' && forPlayers && forPlayers.name !== msg.name) this.sendTo(ws, { type: 'op', name: forPlayers.name, args: forPlayers.args });
         return;
       }
 

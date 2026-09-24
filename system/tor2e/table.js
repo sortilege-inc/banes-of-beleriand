@@ -64,7 +64,9 @@ window.VttSystem = (function () {
     const party = (S().party || []).map((m) => ({ id: 'tk-' + m.id, label: m.name, kind: 'party', owner: m.id, ref: m.id }));
     if (party.length) groups.push({ label: 'The Company', items: party });
     const sc = scene(currentSceneId());
-    const here = sc ? cast(sc.id).map((r) => ({ label: r.name, kind: r.type === 'Adversary' ? 'cast' : 'folk', ref: r.id })) : [];
+    // each tracked foe its own token (system/tor2e/foes.js), then the rest of the scene's cast
+    const foes = sc && window.TorFoes ? window.TorFoes.list(sc.id).map((x) => ({ id: 'tk-' + x.id, label: window.TorFoes.label(sc.id, x), kind: 'cast', ref: x.rec, foe: x.id, scene: sc.id })) : [];
+    const here = sc ? foes.concat(cast(sc.id).map((r) => ({ label: r.name, kind: r.type === 'Adversary' ? 'cast' : 'folk', ref: r.id }))) : [];
     if (here.length) groups.push({ label: sc.name, items: here });
     return groups;
   }
@@ -80,6 +82,9 @@ window.VttSystem = (function () {
     const r = t.ref ? D.record(t.ref) : null;
     if (!r) return null;
     const f = r.fields || {};
+    // a tracked foe: its own Endurance and Hate (the players' copy holds only whether it is down)
+    const x = t.foe && window.TorFoes ? window.TorFoes.byId(t.scene, t.foe) : null;
+    if (x) return { text: [x.out ? 'Out' : null, typeof x.endurance === 'number' ? 'Endurance ' + x.endurance + '/' + f.Endurance : null, typeof x.hate === 'number' ? (f.Hate != null ? 'Hate ' : 'Resolve ') + x.hate : null, window.TorFoes.isWeary(x) ? 'Weary' : null, x.wounds ? 'Wounds ' + x.wounds : null].filter(Boolean).join(' · ') || 'Standing', pips: [] };
     if (r.type !== 'Adversary') return { text: f.Occupation || r.type, pips: [] };
     return { text: ['Endurance ' + f.Endurance, f.Hate != null ? 'Hate ' + f.Hate : f.Resolve != null ? 'Resolve ' + f.Resolve : null, 'Parry ' + f.Parry, 'Armour ' + f.Armour].filter(Boolean).join(' · '), pips: [] };
   }

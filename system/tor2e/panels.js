@@ -48,6 +48,9 @@
     State.commit('setCampaign', [{ modules: [cid].concat(rest) }]);
   }
   function putIn(sceneId, recordId) {
+    // an adversary joins as a foe of its own, tracked (system/tor2e/foes.js); anyone else by record
+    const rec = D.record(recordId);
+    if (rec && rec.type === 'Adversary' && window.TorFoes) return window.TorFoes.add(sceneId, recordId, 1);
     const ids = ((S().cast || {})[sceneId] || []).slice();
     if (ids.indexOf(recordId) === -1) ids.push(recordId);
     State.commit('setSceneCast', [sceneId, ids]);
@@ -101,11 +104,14 @@
           button('Open on the table', () => window.open(window.VttConfig.pages.table + '?scene=' + encodeURIComponent(cur), (window.VttConfig.channel || 'vtt') + '-table'), 'tiny'),
           el('label', { class: 'small' }, [el('input', { type: 'checkbox', checked: st.done || null, onchange: (ev) => State.commit('setSceneDone', [a.id, cur, ev.target.checked]) }), ' done']),
         ]));
+        box.appendChild(window.TorFoes.block(cur));
         box.appendChild(el('div', { class: 'prop-k' }, ['In it']));
         box.appendChild(here.length ? el('div', { class: 'chiprow tight' }, here.map((r) => el('span', { class: 'chip' }, [
           el('button', { class: 'ref', type: 'button', onclick: () => Panels.select({ kind: 'entity', id: r.id }) }, [r.name]),
+          // an adversary put here before foes were tracked one by one: make it a tracked foe
+          r.type === 'Adversary' ? el('button', { class: 'ref tiny', type: 'button', title: 'track it: Endurance, Hate, Wounds', onclick: () => { takeOut(cur, r.id); window.TorFoes.add(cur, r.id, 1); } }, ['track']) : null,
           el('button', { class: 'ref tiny', type: 'button', title: 'take out', onclick: () => takeOut(cur, r.id) }, ['×']),
-        ]))) : el('div', { class: 'muted small' }, ['No one yet. Adversaries and Loremaster characters can be put here from their panels or the Inspector.']));
+        ]))) : (window.TorFoes.list(cur).length ? null : el('div', { class: 'muted small' }, ['No one yet. Adversaries and Loremaster characters can be put here from their panels or the Inspector.'])));
         if (named.length) box.appendChild(el('div', { class: 'chiprow tight' }, [el('span', { class: 'muted small' }, ['The adventure’s cast:'])].concat(named.map((r) => button('+ ' + r.name, () => putIn(cur, r.id), 'ghost tiny')))));
         box.appendChild(el('div', { class: 'prop-k' }, ['Loremaster’s notes', el('span', { class: 'muted' }, [' · never sent to players'])]));
         box.appendChild(el('textarea', { class: 'text', rows: 5, placeholder: 'What happens here…', oninput: debounce((ev) => State.commit('setSceneNotes', [a.id, cur, ev.target.value]), 400) }, [st.notes || '']));
@@ -132,12 +138,42 @@
     });
     return el('span', {}, [button(label, () => file.click(), cls), file]);
   }
+  // The Company's bookkeeping between sessions (system/tor2e/sheet.js endSession / fellowship): the
+  // session's 3 Skill points and 3 Adventure points to each hero who attended; the Fellowship
+  // phase's Hope and the Shadow the Loremaster allows removed; Yule's.
+  let bookkeeping = null;   // 'session' | 'fellowship' — the form open, kept across redraws
+  function bookkeepingBlock(party) {
+    const box = el('div', { class: 'bookkeeping' });
+    box.appendChild(el('div', { class: 'chiprow tight' }, [
+      button('End the session…', () => { bookkeeping = bookkeeping === 'session' ? null : 'session'; Bus.emit('state:remote', { view: true }, { local: true }); }, 'ghost tiny'),
+      button('Fellowship phase…', () => { bookkeeping = bookkeeping === 'fellowship' ? null : 'fellowship'; Bus.emit('state:remote', { view: true }, { local: true }); }, 'ghost tiny'),
+    ]));
+    if (bookkeeping === 'session') {
+      const boxes = party.map((m) => ({ id: m.id, c: el('input', { type: 'checkbox', checked: true }) }));
+      box.appendChild(el('div', { class: 'paper small' }, [
+        el('div', {}, ['Each hero who attended earns ' + Sheet().SESSION_SKILL_POINTS + ' Skill points and ' + Sheet().SESSION_ADVENTURE_POINTS + ' Adventure points.']),
+        el('div', { class: 'chiprow tight' }, party.map((m, i) => el('label', { class: 'check' }, [boxes[i].c, ' ' + m.name]))),
+        button('End the session', () => { Sheet().endSession(boxes.filter((b) => b.c.checked).map((b) => b.id)); bookkeeping = null; Bus.emit('state:remote', { view: true }, { local: true }); }, 'tiny'),
+      ]));
+    }
+    if (bookkeeping === 'fellowship') {
+      const shadow = el('select', { class: 'scope tiny' }, [0, 1, 2, 3].slice(0, Sheet().SHADOW_REMOVED_MAX + 1).map((n) => el('option', { value: n }, [n ? 'remove ' + n + ' Shadow' : 'no Shadow removed'])));
+      const yule = el('input', { type: 'checkbox' });
+      box.appendChild(el('div', { class: 'paper small' }, [
+        el('div', {}, ['Every hero recovers Hope equal to HEART (all of it at Yule). At Yule each also earns Skill points equal to WITS and ages a year.']),
+        el('div', { class: 'chiprow tight' }, [shadow, el('label', { class: 'check' }, [yule, ' Yule'])]),
+        button('Apply to the Company', () => { Sheet().fellowship(party.map((m) => m.id), { shadow: parseInt(shadow.value, 10) || 0, yule: yule.checked }); bookkeeping = null; Bus.emit('state:remote', { view: true }, { local: true }); }, 'tiny'),
+      ]));
+    }
+    return box;
+  }
   function renderCompany(container, ctx) {
     const draw = () => {
       container.innerHTML = '';
       const party = S().party || [];
       container.appendChild(el('div', { class: 'chiprow' }, [characterLoader('Load Player-hero file(s)…', ''), el('span', { class: 'muted small' }, ['made on the site’s “Making a hero”'])]));
       if (!party.length) container.appendChild(el('div', { class: 'empty' }, ['No one in the Company yet.']));
+      else if (Sheet()) { container.appendChild(window.TorCombat.companyBlock(party)); container.appendChild(bookkeepingBlock(party)); }
       party.forEach((m) => container.appendChild(el('div', { class: 'member' }, [
         el('button', { class: 'card static-card', type: 'button', onclick: () => Panels.select({ kind: 'party', id: m.id }) }, [
           el('div', { class: 'card-name' }, [m.name]),
