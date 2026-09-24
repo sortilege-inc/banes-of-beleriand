@@ -143,3 +143,30 @@ body.play { display: block; background: var(--parch-2); }
   .window-controls, .session-controls { margin: 0; }
   .sidebar-foot { margin-left: auto; }
 }
+
+/* ── the Loremaster's three panes (system/tor2e/gm-panes.js) ── */
+.paper { background: var(--parch); border: 1px solid var(--rule); padding: 12px 16px; margin-top: 8px; }
+.notes-doc { max-height: 60vh; overflow: auto; }
+.notes-gate { text-align: center; padding: 18px 14px; }
+.notes-gate-title { font-weight: 600; font-size: 1.15em; margin-bottom: 6px; }
+.notes-free, .arc-text { width: 100%; }
+.arc-scene { border-left: 3px solid var(--rule); padding: 4px 0 4px 8px; margin: 6px 0; }
+.arc-scene.played { opacity: .6; border-left-color: var(--green); }
+.arc-title { flex: 1; }
+.thread { border-left: 3px solid var(--red); padding: 2px 0 2px 8px; margin: 4px 0; }
+.thread.closed { border-left-color: var(--rule); opacity: .6; }
+.enc-row { margin-left: 8px; }
+.enc-sum { margin: 6px 0; }
+.enc-band { padding: 2px 6px; margin: 2px 0; opacity: .55; }
+.enc-band.on { opacity: 1; border-left: 3px solid var(--red); background: var(--parch); }
+.enc-band ol { margin: 4px 0 2px 1.2em; padding: 0; }
+
+/* the player's account buttons (engine/play.js): open on a wide screen, folded to one line on a phone */
+.play-menu > summary { display: none; }
+@media (max-width: 640px) {
+  .play-status .room-k { display: none; }
+  .play-menu > summary { display: flex; align-items: center; justify-content: space-between; min-height: 40px; padding: 0 14px; font-family: var(--font-ui); font-size: 14px; letter-spacing: .06em; color: var(--ink-2); border-bottom: 1px solid var(--rule); cursor: pointer; list-style: none; }
+  .play-menu > summary::-webkit-details-marker { display: none; }
+  .play-menu > summary::after { content: '⋯'; font-size: 20px; color: var(--muted); }
+  .play-menu .play-bar { display: grid; grid-template-columns: 1fr; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+}

@@ -146,6 +146,23 @@ built here, on branch `instance-hooks`, ported from l5r5e's I1 and I-8:
 | I-4 | The names gate reads every `{hash: null, name}` reference the build writes (a CONCERNS entry, a list item, a REF field given by name); the references gate also admits an arc's SCENE / LOCATION block ids | This corpus hashes every entity, so a by-name reference is rarer than in l5r5e, but a layer may still write one. |
 | I-5 | Not ported: l5r5e's I-9 (the campaign layer loads with every book) | This corpus has no `MODIFY` and this VTT shows no corrections beside their targets; a house rule here would need that first. |
 
+## Catching up with the family (2026-09-24)
+
+> The family's `PLAYBOOK.md` and `INSTANCES.md` now live in `~/Sortilege/VTT/`, beside the repos.
+> Since this VTT's M5, `sortilege-vtt-l5r5e` gained sixteen instance milestones (its I1–I16),
+> driven by Portents & Fortunes. I1 (the hooks) was ported here for Banes of Beleriand; this
+> section ports the rest — what is generic whole, what is L5R-shaped rebuilt on The One Ring's
+> own rules.
+
+| # | Milestone | Proof |
+|---|---|---|
+| T1 | **The engine caught up, and the Loremaster's three panes** (l5r5e I8's `renameIds`, I10's seed, I11's player menu and join link, I9's panes): `engine/state.js` and `engine/render.js` are l5r5e's byte for byte; `engine/app.js` runs the instance's seed; `engine/play.js` folds the player's buttons into one line on a phone and follows a join link out of an old room. `system/tor2e/gm-panes.js` registers **Notes** (an instance's document from `VttConfig.notes`, gated or not, and free notes), **Scenes** (the campaign's own arc: add, edit, reorder, mark played, remove) and **Threads · Encounters** (threads; an encounter of adversaries from any book, saved and put in the current scene; who is in the scene). The book prints no encounter rating, so the builder counts adversaries against the Company and shows, in the book's words, who handles engagement (*Engagement*) and whether a Rearward stance is allowed (its sidebar's *twice the number of adventurers*). The four keys are Loremaster-only ops (`setGmNotes`, `setArc`, `setThreads`, `setEncounters`); `archivePartyVersion` and `advancePartyMember` are added for T2 | **landed 2026-09-24** — `bash build/build.sh`: *11629 strings — 0 uncovered · 0 unsourced*, *check_shape: OK (115 assertions)*, `data/` unchanged. Browser on 8741 at 800px through the panes' controls: a free note typed; *Arrival at Bree* and *The ruins at dusk* added, the first marked played, the second moved up → *The arc · 2 scenes, 1 played*; the thread *Who sent the brigands?*; *Orc Soldier* ×1 against the Company's one hero → *MORE PLAYER-HEROES THAN ENEMIES …* with the players' two steps and *Rearward allowed*; ×3 → *MORE ENEMIES THAN PLAYER-HEROES …*, the Loremaster's two steps, *No Rearward*; saved as *Orc patrol*, *Put in Trapped!* → the scene's cast *Elwen, Footpad, Orc Soldier*. `playerView` of the campaign carries none of `gmNotes`, `arc`, `threads`, `encounters`. Under node: a player may send none of the four; may archive and advance their own hero and not another's; a version archived twice is kept once. **The seed**, with a temporary `defaultCampaign.seed` (removed after): a fresh campaign named *A new company* got the seed's scene and thread; its title edited in the Scenes pane stood through a reload; the existing campaign's own arc and thread were untouched. (The first try failed on the test file's own `kind` — *is not a campaign pack* — which is the engine refusing a wrong file, as it should.) Only console errors: the stale room 6DJ3L's websocket (no Worker running) |
+
+| # | Decision | Why |
+|---|---|---|
+| T-1 | The encounter builder shows counts and the two rules the book ties to them, not a rating | The core prints no encounter-rank method (searched: nothing on sizing a fight to the Company beyond an adventure's own "1 per Player-hero" lines); inventing a ratio would be the tool's words posing as the rules. |
+| T-2 | The Loremaster's page keeps opening on Adventure · Company · Inspector; the three panes are in the nav | An instance chooses its opening panes in its own config (`defaultSlots`), as Portents and Banes do. |
+
 ## STOPPED HERE — to resume
 
 **M0–M5 landed 2026-09-23**, each committed and pushed. Nothing is deployed and the repo is
