@@ -185,3 +185,25 @@ body.play { display: block; background: var(--parch-2); }
 .roll-line.event .roll-who { color: var(--muted); }
 .hero-log { margin: 6px 0; }
 .bookkeeping .paper { margin: 6px 0; }
+
+/* ── a combat (system/tor2e/combat.js) ── */
+.combat-pane { border: 1px solid var(--red); background: var(--parch); padding: 10px 12px; margin: 10px 0; }
+.combat-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.combat-head h3 { margin: 0; font-family: var(--font-display); color: var(--red); font-size: 20px; }
+.combat-pane .track-name { display: block; margin: 10px 0 4px; }
+.stance-pick { display: flex; flex-wrap: wrap; gap: 6px; }
+.stance-btn { border: 1px solid var(--rule); background: var(--parch-2); color: var(--ink); font-family: var(--font-ui); font-size: 15px; padding: 4px 12px; cursor: pointer; }
+.stance-btn:hover { background: var(--parch-3); }
+.stance-btn.on, .stance-btn.on:hover { border-color: var(--red); background: var(--red); color: #fff; }
+.stance-rule { border-left: 3px solid var(--red); padding: 4px 8px; margin: 6px 0; background: var(--parch-2); }
+.engaged { display: flex; flex-direction: column; gap: 4px; }
+.engaged-foe.target { border-left: 3px solid var(--red); padding-left: 6px; }
+.combat-weapons, .combat-weapons .cw-row { display: flex; flex-direction: column; gap: 6px; }
+.combat-weapons .cw-row { flex-direction: row; flex-wrap: wrap; align-items: center; }
+.grip { display: inline-flex; gap: 2px; }
+.toggle { border: 1px solid var(--rule); background: var(--parch-2); color: var(--ink); font-family: var(--font-ui); font-size: 13px; padding: 2px 8px; cursor: pointer; }
+.toggle:hover { background: var(--parch-3); }
+.toggle.on, .toggle.on:hover { border-color: var(--red); background: var(--red); color: #fff; }
+.attack-out { margin: 8px 0; padding: 6px 8px; background: var(--parch-2); border-left: 3px solid var(--green); }
+.attack-out .pierce { color: var(--red); font-weight: 600; }
+.company-combat { margin: 6px 0; }

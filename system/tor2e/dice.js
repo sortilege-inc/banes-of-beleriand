@@ -168,6 +168,8 @@ window.TorDice = (function () {
       if (v.weary !== undefined) weary.c.checked = !!v.weary;
       if (v.miserable !== undefined) miserable.c.checked = !!v.miserable;
       if (v.switched !== undefined) switched.c.checked = !!v.switched;
+      if (v.gain != null) gain.value = String(v.gain);
+      if (v.lose != null) lose.value = String(v.lose);
     };
     return form;
   }

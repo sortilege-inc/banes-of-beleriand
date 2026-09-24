@@ -167,7 +167,7 @@
       const party = S().party || [];
       container.appendChild(el('div', { class: 'chiprow' }, [characterLoader('Load Player-hero file(s)…', ''), el('span', { class: 'muted small' }, ['made on the site’s “Making a hero”'])]));
       if (!party.length) container.appendChild(el('div', { class: 'empty' }, ['No one in the Company yet.']));
-      else if (Sheet()) container.appendChild(bookkeepingBlock(party));
+      else if (Sheet()) { container.appendChild(window.TorCombat.companyBlock(party)); container.appendChild(bookkeepingBlock(party)); }
       party.forEach((m) => container.appendChild(el('div', { class: 'member' }, [
         el('button', { class: 'card static-card', type: 'button', onclick: () => Panels.select({ kind: 'party', id: m.id }) }, [
           el('div', { class: 'card-name' }, [m.name]),

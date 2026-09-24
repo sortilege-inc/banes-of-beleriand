@@ -140,7 +140,7 @@ def main():
 
     # the rules the dice and the sheet cite (RULES in system/tor2e/dice.js, sheet.js) are core
     # entities under those names; every entity id the creator names is a core entity
-    for fn in ("dice.js", "sheet.js", "gm-panes.js"):
+    for fn in ("dice.js", "sheet.js", "gm-panes.js", "combat.js"):
         src = open(os.path.join(HERE, "system", "tor2e", fn), encoding="utf-8").read()
         cited = re.findall(r"\{ id: '(#\w+)', name: '([^']+)' \}", src)
         check("%s cites rules" % fn, len(cited) > 0, True)

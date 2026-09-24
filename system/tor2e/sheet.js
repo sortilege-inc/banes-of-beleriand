@@ -461,6 +461,10 @@ window.TorSheet = (function () {
           change(cur, { hope: Math.max(0, live(cur).hope - HOPE_SPEND) }, 'spent on ' + (r.what || 'a roll'));
           r.spendHope = false;
         }
+        // a roll set up for a purpose (an attack, a Protection roll: system/tor2e/combat.js) has its follow-up
+        const tag = r.tag;
+        r.tag = null;
+        if (tag && tag.after) tag.after(x, memberNow(m.id, m));
       } });
       rollers[m.id] = r;
     }
@@ -473,11 +477,13 @@ window.TorSheet = (function () {
     const inspired = live(m).inspired;
     r.what = what + (o.hope ? ' (1 Hope' + (inspired ? ', Inspired' : '') + ')' : '');
     r.spendHope = !!o.hope;
-    r.set({ rating, tn: target == null ? '' : target, favour: o.favoured ? 'favoured' : null, weary: isWeary(m), miserable: isMiserable(m), switched: false });
-    const gain = r.querySelectorAll('input.num')[2];
-    if (gain) gain.value = o.hope ? String(inspired ? INSPIRED_DICE : HOPE_DICE) : '0';
+    r.tag = o.tag || null;
+    const gain = (o.gain || 0) + (o.hope ? (inspired ? INSPIRED_DICE : HOPE_DICE) : 0);
+    r.set({ rating, tn: target == null ? '' : target, favour: o.favoured ? 'favoured' : null, weary: isWeary(m), miserable: isMiserable(m), switched: false, gain, lose: o.lose || 0 });
+    if (o.setOnly) return r;
     r.querySelector('.roll-btn').click();
-    if (gain) gain.value = '0';
+    r.set({ gain: 0, lose: 0 });
+    return r;
   }
 
   const cite = (rule, label) => el('a', { class: 'ref rule-cite', href: '#', onclick: (ev) => { ev.preventDefault(); if (window.TorOpenEntity) window.TorOpenEntity(rule.id); } }, [label || rule.name]);
@@ -563,6 +569,9 @@ window.TorSheet = (function () {
     box.appendChild(tallies(m, v, false));
     box.appendChild(conditionsBlock(m, false));
     box.appendChild(restsBlock(m, v));
+    // a combat the Loremaster has started (system/tor2e/combat.js)
+    const fight = window.TorCombat && window.TorCombat.pane(m, o);
+    if (fight) box.appendChild(fight);
 
     // the rolls
     box.appendChild(el('h4', {}, ['Rolls', el('span', { class: 'muted small' }, [' · Weary and Miserable are read off the sheet'])]));
@@ -580,15 +589,15 @@ window.TorSheet = (function () {
       el('span', { class: 'muted small' }, ['(', cite(RULES.tnUse), ')']),
     ]));
     // attacks: a Combat Proficiency against the STRENGTH TN; the weapon's Damage and Injury beside it
-    const profOf = (w) => (v['Combat Proficiencies'] || []).find((p) => p.Skill === D.f(recordOf(w), 'Proficiency'));
-    const gear = (v['War Gear'] || []);
+    const C = window.TorCombat;
+    const gear = (v['War Gear'] || []).filter((w) => w && w.hash);
     box.appendChild(el('h4', {}, ['War gear', el('span', { class: 'muted small' }, [' · attack rolls against the STRENGTH TN'])]));
     box.appendChild(gear.length ? el('div', { class: 'rated' }, gear.map((w) => {
-      const p = profOf(w);
-      const rank = p ? p.Rank || 0 : 0;
+      const wo = C.weaponOf(w);
+      const rank = C.ratingFor(v, wo);
       return el('div', { class: 'rated-row' }, [
-        el('span', { class: 'rated-main' }, [el('button', { class: 'ref', type: 'button', onclick: () => window.TorOpenEntity && window.TorOpenEntity(w.hash) }, [w.name]), el('span', { class: 'muted small' }, [' ' + weaponLine(w) + ' · ' + (D.f(recordOf(w), 'Proficiency') || '') + ' ' + rank])]),
-        button('Attack', () => rollAbility(m, 'Attack with ' + w.name, rank, tn(v, 'Strength'), { hope: hopeOn() }), 'tiny'),
+        el('span', { class: 'rated-main' }, [el('button', { class: 'ref', type: 'button', onclick: () => window.TorOpenEntity && window.TorOpenEntity(w.hash) }, [w.name]), el('span', { class: 'muted small' }, [' ' + weaponLine(w) + ' · ' + (wo.prof || '') + ' ' + rank + (wo.prof === 'Brawling' ? ' (highest proficiency, lose (1d))' : '')])]),
+        C.combatOf(m) ? null : button('Attack', () => C.attack(m, wo, null, { hope: hopeOn() }), 'tiny'),
       ]);
     })) : el('div', { class: 'muted small' }, ['No war gear on the sheet.']));
     // the Protection roll: the armour's and the helm's dice against the blow's Injury
