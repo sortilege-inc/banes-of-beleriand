@@ -88,11 +88,17 @@
 
   // The Loremaster's own pack state: free notes, the arc, open threads, saved encounters. Never
   // shared: no player may send them, none is in a player's view, and none is forwarded.
+  // They are local (PLAYBOOK §4b.2): kept in this browser's pack and never sent to a session's room.
+  // `gm` is the GM's own sections (overview, places, people, pc, rules, threadsNote, questions —
+  // engine/gm-text.js), the arc's scenes carry sessions and beats.
   const gmOnly = () => null;
-  Ops.register('setGmNotes', (s, text) => { s.gmNotes = String(text || ''); }, null, gmOnly);
-  Ops.register('setArc', (s, list) => { s.arc = (list || []).map((x) => Object.assign({}, x)); }, null, gmOnly);
-  Ops.register('setThreads', (s, list) => { s.threads = (list || []).map((x) => Object.assign({}, x)); }, null, gmOnly);
-  Ops.register('setEncounters', (s, list) => { s.encounters = JSON.parse(JSON.stringify(list || [])); }, null, gmOnly);
+  const LOCAL = { local: true };
+  const copy = (x) => JSON.parse(JSON.stringify(x == null ? null : x));
+  Ops.register('setGm', (s, where, value) => { if (!s.gm) s.gm = {}; s.gm[String(where)] = copy(value); }, null, gmOnly, LOCAL);
+  Ops.register('setGmNotes', (s, text) => { s.gmNotes = String(text || ''); }, null, gmOnly, LOCAL);
+  Ops.register('setArc', (s, list) => { s.arc = copy(list || []); }, null, gmOnly, LOCAL);
+  Ops.register('setThreads', (s, list) => { s.threads = copy(list || []); }, null, gmOnly, LOCAL);
+  Ops.register('setEncounters', (s, list) => { s.encounters = copy(list || []); }, null, gmOnly, LOCAL);
 
   return Ops;
 });
