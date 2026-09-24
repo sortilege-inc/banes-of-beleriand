@@ -203,7 +203,9 @@ export class SessionRoom extends DurableObject<Env> {
         try {
           Ops.apply(doc, msg.name, msg.args);
         } catch (e) {
-          return this.sendTo(ws, { type: 'error', message: (e as Error).message });
+          // the op failed here but already ran on the sender's copy: resend the stored document
+          this.sendTo(ws, { type: 'error', message: (e as Error).message });
+          return this.sendTo(ws, this.snapshotFor(att));
         }
         this.put('doc', doc);
         const forPlayers = Ops.forPlayers(doc, msg.name, msg.args);
@@ -211,6 +213,9 @@ export class SessionRoom extends DurableObject<Env> {
           if (a.role === 'gm') return { type: 'op', name: msg.name, args: msg.args };
           return forPlayers ? { type: 'op', name: forPlayers.name, args: forPlayers.args } : null;
         }, ws);
+        // a player's op that players see as a different op (a hit on a foe arrives as the foes'
+        // player view): the sender gets that view too, or its copy keeps what it guessed
+        if (att.role !== 'gm' && forPlayers && forPlayers.name !== msg.name) this.sendTo(ws, { type: 'op', name: forPlayers.name, args: forPlayers.args });
         return;
       }
 
