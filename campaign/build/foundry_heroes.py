@@ -44,6 +44,10 @@ ALIAS = {
 STAGE = re.compile(r"^\d+\s*-\s*")
 # Items Foundry keeps as "miscellaneous" that are not gear: notes typed into the item list.
 NOT_GEAR = {"grieving her husband", "no longer free from fear", "slender/nimble"}
+# Values the owner has ruled on since the exports, by hero and sheet field, each with its source.
+OVERRIDES = {
+    "Már": {"Treasure": (90, "the Foundry world's Már, last changed 2025-07-26; owner 2026-09-25")},
+}
 
 
 def norm(s):
@@ -258,6 +262,9 @@ def convert(path, report):
     if background:
         log["not on the sheet"].append("background: " + re.sub(r"\s+", " ", background))
 
+    for k, (val, why) in OVERRIDES.get(name, {}).items():
+        log["resolved"].append("%s %r (the export) → %r (%s)" % (k, ch[k], val, why))
+        ch[k] = val
     ascii_ = unicodedata.normalize("NFKD", norm(name)).encode("ascii", "ignore").decode()
     slug = re.sub(r"[^a-z0-9]+", "-", ascii_).strip("-")
     out = {"kind": FILE_KIND, "version": 1, "system": "tor2e", "templateId": TEMPLATE, "exported": EXPORTED, "name": name, "character": ch}
