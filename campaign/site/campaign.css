@@ -39,10 +39,8 @@ ol.banes-toc a:hover, ul.banes-toc a:hover { color: var(--red); }
 .banes-sheet, .banes-statblock { margin-top: 22px; }
 .banes-sheet { max-width: 1100px; }
 
-/* Behind the Veil (the Loremaster's panel) */
-.banes-gate { padding: 12px 0; }
-.banes-veil-doc { margin: 8px 0; border: 1px solid var(--rule); background: var(--parch); padding: 6px 12px; }
-.banes-veil-doc > summary { cursor: pointer; font-family: var(--font-display); font-weight: 600; color: var(--red); }
+/* The Company's files (the Loremaster's panel) */
+.banes-company-files .chiprow { margin: 4px 0; }
 
 @media (max-width: 720px) {
   .banes-portrait { float: none; display: block; width: 100%; margin: 0 0 14px; }

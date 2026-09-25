@@ -39,7 +39,6 @@ SECTIONS = {
     "company": ("company", {"name", "epithet", "culture", "calling", "player", "portrait", "sheet"}, {"name"}),
     "people": ("dramatis-personae", {"name", "epithet", "side", "entity", "portrait", "first"}, {"name", "side"}),
     "atlas": ("atlas", {"name", "region", "portrait"}, {"name"}),
-    "veil": ("veil", {"title"}, {"title"}),
 }
 SIDES = ("allies", "foes", "others")
 FILE_KIND = "sortilege-vtt-character"      # system/tor2e/sheet.js FILE_KIND
@@ -144,6 +143,16 @@ def main():
             site[key] = {"md": body}
     for sid in SECTIONS:
         site[sid] = read_section(sid)
+    # a page anywhere else would be published and drawn nowhere: fail it (the Loremaster's own
+    # material is not a doc — it lives in the GM tabs, in the pack; PLAN.md O2)
+    placed = {"README.md", "home.md", "timeline.md"} | {f for f, _a, _r in SECTIONS.values()}
+    for dirpath, _dirs, files in os.walk(DOCS):
+        for fn in files:
+            rel = os.path.relpath(os.path.join(dirpath, fn), DOCS)
+            top = rel.split(os.sep)[0]
+            if fn.endswith(".md") and not (rel in placed or (top in placed and os.sep in rel and rel.count(os.sep) == 1)):
+                fail(os.path.join(dirpath, fn), "not a page of any section (see campaign/docs/README.md); "
+                     "the Loremaster's notes go in the GM tabs on /gm/, not in docs/")
 
     entities = known_entities()
     slugs = {p["slug"]: sid for sid in SECTIONS for p in site[sid]}

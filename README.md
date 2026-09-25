@@ -6,7 +6,8 @@ A *The One Ring, Second Edition* campaign, served as an **instance** of
 The VTT owns the root: the site at `/`, the Loremaster's table at `/gm/`, the engine, the TOR2e
 system module, and the books generated from the Titterpig corpus. The campaign owns
 `campaign/`: its pages (Home, Chronicle, the Company, Dramatis Personae, Timeline, Atlas) are
-tabs on the VTT's site, and its Loremaster's notes are the *Behind the Veil* panel on `/gm/`.
+tabs on the VTT's site, and its Loremaster's notes are in the GM tabs on `/gm/` (Overview, Scenes, Threads, People,
+Places, Notes), saved in the pack; the campaign adds a *Company files* panel there.
 
 - `campaign/PLAN.md` — how this instance was stood up: decisions, milestones, their proof.
 - `campaign/docs/README.md` — how to write the campaign's pages.

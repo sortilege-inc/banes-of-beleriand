@@ -11,8 +11,8 @@ window.VttConfig = {
   pages: { site: './', gm: 'gm/', table: 'gm/vtt.html', play: 'gm/play.html' },
   // what a fresh browser opens on until a campaign is created or restored
   defaultCampaign: { name: 'Banes of Beleriand', modules: [], books: [] },
-  // the three panels the Loremaster's page opens on (engine/app.js); `veil` is the campaign's own
-  defaultSlots: ['veil', 'company', 'inspector'],
+  // the three panels the Loremaster's page opens on (engine/app.js)
+  defaultSlots: ['scenes', 'company', 'inspector'],
   // What this instance adds to the upstream pages (engine/instance.js): its DSL layer (built by
   // build/build_layer.sh into campaign/data/), its authored prose (campaign/build/build_docs.py →
   // campaign/data/docs.js), the campaign's site tabs and its Loremaster's panel.

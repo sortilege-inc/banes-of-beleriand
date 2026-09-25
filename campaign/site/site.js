@@ -25,7 +25,7 @@
     const box = el('div', { class: 'prose banes-prose' + (cls ? ' ' + cls : '') });
     box.innerHTML = html || '';
     box.querySelectorAll('a.doc-link').forEach((a) => {
-      const tab = a.getAttribute('data-tab') === 'veil' ? null : a.getAttribute('data-tab');
+      const tab = a.getAttribute('data-tab');
       if (tab) a.setAttribute('href', Site().href(tab, [a.getAttribute('data-slug')]));
       else a.removeAttribute('data-slug');
     });
