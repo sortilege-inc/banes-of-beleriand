@@ -11,7 +11,7 @@ and sets the order within its section — number them (`01-…`) where order mat
 | Where | Site tab | Front matter (**required**) | The body |
 |---|---|---|---|
 | `home.md` | Home | — | The campaign's front page, above the cards into every section. |
-| `chronicle/*.md` | Chronicle | **title**, part, date, played | One chapter or session. `part` groups chapters (a book, an arc); `date` is the in-world date, `played` the real one. Mechanics go in footnotes (`[^1]`), which render as the chapter's ledger. |
+| `chronicle/*.md` | Chronicle | **title**, part, date, played | One chapter or session. `part` groups chapters (a book, an arc); `date` is the in-world date, `played` the real one. Prose only: no dice, no named rules — the mechanics are implicit in the telling (PLAN.md O3). |
 | `company/*.md` | The Company | **name**, epithet, culture, calling, player, portrait, sheet | A Player-hero's biography. `sheet` is the character file saved from the VTT's sheet (`pack/company/<name>.tor2e-hero.json`); the page draws it, and the Loremaster's *Company files* panel adds it to the Company in one click. |
 | `dramatis-personae/*.md` | Dramatis Personae | **name**, **side**, epithet, entity, portrait, first | Someone met. `side` is `allies`, `foes` or `others`. `entity` is the id of their stat block — in the books or in `campaign/dsl/` — drawn beneath the biography. `first` is where they were met (free text). |
 | `timeline.md` | Timeline | — | The reckoning of events, in whatever shape suits (a list under dated headings, a table). |

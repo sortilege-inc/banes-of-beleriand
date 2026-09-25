@@ -43,6 +43,28 @@ Worker is not deployed (`engine/config.js` `worker.deployed` empty).
 opens on *Scenes · Company · Inspector*. `campaign/docs/veil/` held nothing (`build_docs: … veil 0`),
 so there was nothing to move. (Considered: keeping the veil until there was content.)
 
+**O3 — The content (owner, 2026-09-24).** Sources: `~/Downloads/2025 Banes of Beleriand/` — nine
+sessions 2025-05-06 … 09-09 as audio + machine transcripts (08-26 in several recordings), the
+2025-05-04 premise talk, five Foundry actors, art, the treasure index; and two Notion exports: the
+players' wiki (`a87c443a…/Private & Shared/`: session notes 01–08, characters, Songs of the
+Fellowship) and the GM's notes (`446a1320…/`: the campaign overview, the four Nameless Things —
+Tarkûrzagûl, Môrthuring, Uludrith, Thrakdûmpuzûr — Barad Tarminalë, lore Q&A, a Third-Age
+timeline). **Precedence (owner):** the wiki's spellings are the most correct; the transcripts'
+content is more complete than the wiki. Settled:
+- **Chronicle** — one chapter per session, prose in a Tolkienesque voice (as Caul went Elden Ring),
+  as complete as the recording allows: the dialogue, descriptions, details and specific actions.
+  **No mechanics at all** — no dice, no footnoted ledger, no named rules (feat die, Gandalf rune,
+  Hope, Shadow…); they are implicit in the telling. Nothing the table did not establish. A pilot
+  (session 1) first, reviewed by the owner, then the other nine.
+- **Secrets** — the Loremaster's material (the six Banes, their art, what lies behind each seal)
+  is seeded from the repo (`campaign/pack/`), public, as Caul and Portents did.
+- **Players** — no player names anywhere on the site.
+- **Sheets** — the five Foundry exports as they are (14 May 2025, at creation), labelled as the
+  campaign's start. **Follow-up:** the owner looks for later exports; when found, convert them and
+  replace these.
+- Not published: the audio, the transcripts, the photographed Tale of Years (a *LotR: The Card
+  Game* booklet) and David Day map (copyrighted reference), the fonts.
+
 ## Layout
 
 ```
@@ -70,7 +92,7 @@ campaign/                                                              INSTANCE-
 | U2 | upstream | **Upstream T1–T5 pulled** (upstream `PLAN.md` § *Catching up with the family*): the Loremaster's Notes / Scenes / Threads · Encounters, the record (Skill and Adventure points, End the session, the Fellowship phase, versions), combat, the phone player's page and Advancement, every enemy tracked, the declared grip; the corpus's recovered Tales and Hands text | **landed 2026-09-24** — `git fetch upstream && git merge upstream/main`: no conflicts, 25 files; `engine/config.js` kept this repo's copy (`merge=ours`; upstream changed only comments there, so nothing to carry by hand); the Worker fix already committed here (`b66c249`, `f914b22`) is upstream's too and merged clean. `bash campaign/build/build.sh` → *build_layer: OK*, *campaign build: OK*. Browser (served from Bash on 8742): the site titled *Banes of Beleriand — the books*, the six campaign tabs ahead of upstream's seven, tor2e's scripts; the Loremaster's page titled and branded, its panels upstream's 13 plus *Behind the Veil*, opening on *veil · company · inspector*; the player's page *Banes of Beleriand — play*, the new player sheet loaded. No script errors from the instance's own pages (the console's others were a Daggerheart page cached at this origin) |
 | U3 | upstream | **The family standards (PLAYBOOK §4b)**, upstream `e8b6b23`: `robots.txt` and the robots meta tag, the Loremaster's material in the GM tabs (sessions, scene cards with beats, questions, threads with play notes, People with *About*, Encounters its own pane), the GM ops local, the seed filled by id, the gate on `/gm/`, the books' tabs off the public site | **landed 2026-09-24** — `git merge upstream/main`: no conflicts, 20 files; `engine/config.js` kept this repo's copy (`merge=ours`) and its two new settings were added by hand: `siteBooks: false` and `gmGate` — `diff` against `git show e8b6b23 -- engine/config.js` → identical. `bash campaign/build/build.sh` → *build_layer: OK*, *build_docs: chronicle 0, company 0, people 0, atlas 0, veil 0*, *campaign build: OK*, `campaign/data/` unchanged. Browser (site served from Bash on 8742, Worker `wrangler dev --port 8795 --inspector-port 9293`): **books off** → tabs *Home, Chronicle, The Company, Dramatis Personae, Timeline, Atlas, Dice*; Home's cards the five campaign sections (no books card); `#books`, `#adventures`, `#create`, `#adversaries`, `#folk`, `#search` each land on Home. **Books on** (Settings pane's checkbox → `banes-vtt:site-books` = `1`) → 13 tabs, the books card back, the shelf 10 books; off again → back to 7. **Gate**: `/gm/` shows *The Loremaster’s table* with *Enter* / *Turn back* (→ `./`, the site); after Enter a reload skips it; a new tab shows it again. **Each GM pane saves**: through each pane's own controls — Overview (a section, a ruling, free notes), Scenes (a scene, a question), Threads (a thread, its play note), Places, People (someone, a note on a hero), Encounters (Búrzgul ×1, saved), Notes — then a reload: every entry was still there (Overview and Notes share one free-notes field, which held the last write, Notes'). **Live room** (session `Q5A7D`, frames recorded at `WebSocket.send`): `init` carries none of `gm`/`gmNotes`/`arc`/`threads`/`encounters`; 12 GM-pane actions → **0 frames**; control `setClock` + `removeClock` → 2 `op` frames. **Robots**: `robots.txt` 200 (ends `User-agent: *` / `Disallow: /`); `index.html`, `gm/index.html`, `gm/vtt.html`, `gm/play.html` carry `noindex, nofollow, noarchive, noimageindex` (the instance has no pages of its own, only tabs and a panel on these). **Console**: 0 errors on `/`, `/gm/`, `/gm/vtt.html`, `/gm/play.html`. Test state and the room cleared afterwards. *Behind the Veil* retired after the owner's answer (O2) |
 | M2 | here | **The campaign in the VTT's framing.** The DSL layer (a skeleton), the docs pipeline with its checks, six site tabs ahead of the books, the *Behind the Veil* panel with the Company loader | **landed 2026-09-23** — see *M2 proof* below |
-| M3 | here | **The campaign's content** — the Company, the chronicle, the people, places and the Loremaster's state, written into `campaign/docs/`, `campaign/dsl/` and `campaign/pack/` | Not started: needs the owner (see *Next*) |
+| M3 | here | **The campaign's content** — the Company, the chronicle, the people, places and the Loremaster's state, written into `campaign/docs/`, `campaign/dsl/` and `campaign/pack/` (O3) | **In progress** — session 1's chapter (`docs/chronicle/01-toms-land.md`) drafted as the pilot, awaiting the owner's review; builds (*chronicle 1*, *campaign build: OK*) and renders |
 | M4 | here | **Deploy**: push (**done 2026-09-23**, the owner, `372fa9c`); Pages; the Worker for this origin; a player joins from a second origin, claims a hero, rolls | — |
 
 ### M2 proof (2026-09-23, browser on 8742, through the real controls)
@@ -135,12 +157,12 @@ campaign/                                                              INSTANCE-
 
 **O1's remainder** (above) — Pages, an origin, the Worker.
 
-**The content (M3).** No campaign material was in this repo. Found elsewhere on disk, untouched:
-`~/Downloads/Unsorted Sortilege/Transcripts/` holds four session transcripts titled *Banes of
-Beleriand* (2025-06-03, 07-29, 08-26, 09-09; 38–154 KB each);
-`~/Downloads/Unsorted Sortilege/Campaigns/Banes of Beleriand/` holds three images
-(`haelond.png`, `nevlond.png`, `blue-wizards.png`) and an audio file; `…/AI Art/` has
-`company-banes.png` / `.webp`; `…/Marketing/` a Linktree image. The owner decides what the
-Company, chronicle and people are drawn from.
+**The content (M3, O3).** Pilot: session 1 → `docs/chronicle/01-toms-land.md`, for the owner's
+review; names now from the wiki (Barad Tarminalë, Moriel, Marigold Cotton, Margarita). After
+approval: sessions 2–9 the same way (session notes 01–08 for spelling and shape, the transcripts for
+content; session 9 from its transcript alone); the Company (five sheets from the May 2025 exports,
+via a Foundry → character-file converter); the people and places met; the Loremaster's material
+(the GM notes, the Nameless Things and their art) into `campaign/pack/` as the seed. **Follow-up
+(owner):** later Foundry exports of the five heroes, to replace the creation-time sheets.
 
 To resume: `bash campaign/build/build.sh`, serve the root (`banes`, 8742), open `/` and `/gm/`.
