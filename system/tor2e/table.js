@@ -57,7 +57,9 @@ window.VttSystem = (function () {
   const mapDef = () => null;
   const defaultMapId = (sceneId) => sceneId;
   const legend = () => null;
-  const mapAssets = () => [];
+  // the maps a deployment ships (VttConfig.maps: [{ label, image }], paths from the site root), offered
+  // in the table's "maps in the repo…" list; the books ship none
+  const mapAssets = () => (((window.VttConfig || {}).maps) || []).filter((m) => m && m.image).map((m) => ({ label: m.label || m.image, image: m.image }));
 
   function tokenSources() {
     const groups = [];
