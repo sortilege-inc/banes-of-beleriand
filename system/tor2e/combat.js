@@ -359,7 +359,7 @@ window.TorCombat = (function () {
       box.appendChild(el('div', { class: 'attack-out' }, [
         el('div', {}, [el('b', {}, ['Endurance loss ' + oc.loss]), a.target ? ' to ' + a.target.name : '', oc.fend ? ' · Parry +' + oc.fend + ' this round' : '',
           oc.piercing ? el('span', { class: 'pierce' }, [' · a Piercing Blow: Protection against Injury ' + oc.injury]) : null]),
-        oc.left ? el('div', { class: 'chiprow tight' }, [el('span', { class: 'small' }, [oc.left + ' ', Dice.icon('Success', 'small'), ' to spend: ']), oc.options.map((x) => button(x.name + ' (' + x.gives + ')', () => spend(m, x.name), 'ghost tiny')), el('span', { class: 'muted small' }, ['(', cite(RULES.special), ')'])]) : null,
+        oc.left ? el('div', { class: 'chiprow tight' }, [el('span', { class: 'small' }, [oc.left + ' ', Dice.icon('Success', 'small'), ' to spend: ']), oc.options.map((x) => button([Dice.special(x.name, 'small'), ' ' + x.name + ' (' + x.gives + ')'], () => spend(m, x.name), 'ghost tiny')), el('span', { class: 'muted small' }, ['(', cite(RULES.special), ')'])]) : null,
       ]));
     }
     // the stance's combat task

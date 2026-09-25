@@ -425,9 +425,9 @@ window.VttSiteTabs = (function () {
   return [
     { id: 'books', label: 'The books', render: renderBooks, books: true },
     { id: 'adventures', label: 'Adventures', render: renderAdventures, books: true },
-    { id: 'create', label: 'Making a hero', render: (c, path, ctx) => (window.TorCreator ? window.TorCreator.render(c, path, ctx) : c.appendChild(el('div', { class: 'page empty' }, ['Coming with the character sheet (M4).']))), books: true },
-    { id: 'adversaries', label: 'Adversaries', render: renderAdversaries, books: true },
-    { id: 'folk', label: 'Loremaster characters', render: renderFolk, books: true },
+    { id: 'create', label: 'Making a hero', render: (c, path, ctx) => (window.TorCreator ? window.TorCreator.render(c, path, ctx) : c.appendChild(el('div', { class: 'page empty' }, ['Coming with the character sheet (M4).']))) },
+    { id: 'adversaries', label: 'Adversaries', render: renderAdversaries },
+    { id: 'folk', label: 'Loremaster characters', render: renderFolk },
     { id: 'dice', label: 'Dice', render: renderDice },
     { id: 'search', label: 'Search', render: renderSearch, books: true },
   ];

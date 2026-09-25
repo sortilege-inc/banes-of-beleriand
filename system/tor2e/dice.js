@@ -5,8 +5,10 @@
 // (Degree of Success: "a success", "a great success", "an extraordinary success").
 //
 // The book's rules icons, which the conversion writes as "[Success]", "[Eye of Sauron]" and
-// "[Gandalf Rune]", are drawn as glyphs (assets/icons/, drawn for this tool); the token
-// stays the glyph's title and accessible name, and the string in data/ is untouched.
+// "[Gandalf Rune]", are drawn as glyphs (assets/icons/); the token stays the glyph's title and
+// accessible name, and the string in data/ is untouched. The faces of a roll are drawn as dice
+// (assets/dice/). Glyphs, dice and the special-result icons are the Foundry VTT tor2e system's
+// (MIT; provenance in assets/dice/README.md).
 window.TorDice = (function () {
   const { el, esc } = window.VttRender;
 
@@ -41,11 +43,23 @@ window.TorDice = (function () {
   // ── the icons ──────────────────────────────────────────────────────
   const ICONS = { 'Success': 'success', 'Eye of Sauron': 'eye-of-sauron', 'Gandalf Rune': 'gandalf-rune' };
   const TOKEN = /\[(Success|Eye of Sauron|Gandalf Rune)\]/g;
-  const iconUrl = (word) => new URL('assets/icons/' + ICONS[word] + '.svg', document.baseURI).href;
+  const iconUrl = (word) => new URL('assets/icons/' + ICONS[word] + '.png', document.baseURI).href;
   function tokenHtml(word) {
     return '<span class="rune rune-' + ICONS[word] + '" role="img" aria-label="' + esc(word) + '" title="' + esc(word) + '" style="--rune:url(&quot;' + esc(iconUrl(word)) + '&quot;)"></span>';
   }
   const icon = (word, cls) => el('span', { class: 'rune rune-' + ICONS[word] + (cls ? ' ' + cls : ''), role: 'img', 'aria-label': word, title: word, style: '--rune:url("' + iconUrl(word) + '")' });
+  // the special results of a hit, and Inspired, drawn the same way (assets/icons/special/)
+  const SPECIAL = { 'Heavy Blow': 'heavy-blow', 'Fend Off': 'fend-off', 'Pierce': 'piercing-blow', 'Piercing Blow': 'piercing-blow', 'Shield Thrust': 'shield-thrust', 'Inspired': 'inspired' };
+  const special = (word, cls) => (SPECIAL[word] ? el('span', { class: 'rune special special-' + SPECIAL[word] + (cls ? ' ' + cls : ''), role: 'img', 'aria-label': word, title: word, style: '--rune:url("' + new URL('assets/icons/special/' + SPECIAL[word] + '.svg', document.baseURI).href + '")' }) : null);
+
+  // ── a die, drawn: the face as the die shows it ────────────────────
+  // feat: 1–10, 'eye', 'rune'; success: 1–6, with '-weary' for a 1–3 a Weary hero counts as zero
+  const dieUrl = (name) => new URL('assets/dice/' + name + '.png', document.baseURI).href;
+  const featName = (face) => 'feat-' + (face === EYE ? 'eye' : face === RUNE ? 'rune' : face);
+  const successName = (face, zeroed) => 'success-' + face + (zeroed ? '-weary' : '');
+  function tileHtml(name, title, cls) {
+    return '<img class="die-tile' + (cls ? ' ' + cls : '') + '" src="' + esc(dieUrl(name)) + '" alt="' + esc(title) + '" title="' + esc(title) + '">';
+  }
 
   // ── a roll ─────────────────────────────────────────────────────────
   const d = (n) => 1 + Math.floor(Math.random() * n);
@@ -105,10 +119,34 @@ window.TorDice = (function () {
 
   // ── the faces, drawn ───────────────────────────────────────────────
   function featFace(f, kept) {
-    return el('span', { class: 'die feat' + (kept ? ' kept' : ' dropped') + (f.auto ? ' auto' : '') + (f.zero ? ' zero' : ''), title: f.mark || String(f.face) }, [f.mark ? icon(f.mark) : String(f.face)]);
+    const t = f.mark || String(f.face);
+    return el('img', { class: 'die feat' + (kept ? ' kept' : ' dropped') + (f.auto ? ' auto' : '') + (f.zero ? ' zero' : ''), src: dieUrl(featName(f.face)), alt: t, title: t });
   }
   function successFace(s) {
-    return el('span', { class: 'die success' + (s.face <= WEARY_MAX ? ' outline' : '') + (s.zeroed ? ' zeroed' : '') + (s.icon ? ' icon' : ''), title: s.zeroed ? s.face + ', counted as zero (Weary)' : String(s.face) }, [String(s.face), s.icon ? icon('Success', 'small') : null]);
+    const t = s.zeroed ? s.face + ', counted as zero (Weary)' : s.icon ? s.face + ' and a Success icon' : String(s.face);
+    return el('img', { class: 'die success' + (s.zeroed ? ' zeroed' : '') + (s.icon ? ' icon' : ''), src: dieUrl(successName(s.face, s.zeroed)), alt: t, title: t });
+  }
+  // A roll's line in the log (line() above: "Feat 7/[Gandalf Rune] + 2→0 4 6[Success] = 10 vs TN 14 — …")
+  // with its faces drawn as dice; the rest as the caller's inline text. null for any other line.
+  const FACE = '(?:\\[(?:Eye of Sauron|Gandalf Rune)\\]|\\d{1,2})';
+  const LINE = new RegExp('^Feat (' + FACE + '(?:/' + FACE + ')*)(?: \\+ (.+?))? = (.*)$');
+  function lineHtml(text, inline) {
+    const m = LINE.exec(String(text || ''));
+    if (!m) return null;
+    const feats = m[1].split('/').map((x) => {
+      const mk = /^\[(Eye of Sauron|Gandalf Rune)\]$/.exec(x);
+      if (mk) return tileHtml(featName(mk[1] === 'Eye of Sauron' ? EYE : RUNE), mk[1], 'feat');
+      return /^\d+$/.test(x) ? tileHtml(featName(+x), x, 'feat') : null;
+    });
+    const succ = (m[2] || '').split(' ').filter(Boolean).map((x) => {
+      let k = /^(\d)\[Success\]$/.exec(x);
+      if (k) return tileHtml(successName(+k[1]), k[1] + ' and a Success icon', 'success');
+      k = /^(\d)→0$/.exec(x);
+      if (k) return tileHtml(successName(+k[1], true), k[1] + ', counted as zero (Weary)', 'success');
+      return /^\d$/.test(x) ? tileHtml(successName(+x), x, 'success') : null;
+    });
+    if (feats.some((x) => !x) || succ.some((x) => !x)) return null;   // not a line this function wrote
+    return '<span class="die-tiles">' + feats.join('') + (succ.length ? '<span class="plus">+</span>' + succ.join('') : '') + '</span> = ' + (inline ? inline(m[3]) : esc(m[3]));
   }
   function faces(r) {
     return el('div', { class: 'faces' }, [
@@ -211,5 +249,5 @@ window.TorDice = (function () {
     return { die: td.die, face, mark, row: i === -1 ? null : t.rows[i], index: i };
   }
 
-  return { tableDie, rollTable, RULES, FEAT_SIDES, EYE, RUNE, SUCCESS_SIDES, SUCCESS_ICON, WEARY_MAX, TN_BASE, MAX_RATING, tnOf, TOKEN, tokenHtml, icon, roll, verdict, line, faces, roller };
+  return { tableDie, rollTable, RULES, FEAT_SIDES, EYE, RUNE, SUCCESS_SIDES, SUCCESS_ICON, WEARY_MAX, TN_BASE, MAX_RATING, tnOf, TOKEN, tokenHtml, icon, special, SPECIAL, roll, verdict, line, lineHtml, faces, roller };
 })();

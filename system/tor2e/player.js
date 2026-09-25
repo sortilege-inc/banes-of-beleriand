@@ -130,7 +130,7 @@ window.TorPlayer = (function () {
   // the player's own rolls, newest first
   function rollLog(m) {
     const rows = Sheet().logOf(m).filter((x) => x.kind === 'roll').slice(-5).reverse();
-    return el('div', { class: 'roll-log' }, rows.map((x) => el('div', { class: 'roll-line' + (x.ok ? ' ok' : x.ok === false ? ' fail' : '') }, [el('span', { class: 'roll-who' }, [x.label || 'a roll']), el('span', { class: 'roll-text', html: E.inline(x.text || '') })])));
+    return el('div', { class: 'roll-log' }, rows.map((x) => el('div', { class: 'roll-line' + (x.ok ? ' ok' : x.ok === false ? ' fail' : '') }, [el('span', { class: 'roll-who' }, [x.label || 'a roll']), el('span', { class: 'roll-text', html: Dice.lineHtml(x.text, E.inline) || E.inline(x.text || '') })])));
   }
 
   // ── gear ──
@@ -179,7 +179,7 @@ window.TorPlayer = (function () {
       S.isUnconscious(m) ? el('span', { class: 'cond on' }, ['Unconscious']) : null,
       toggle('Wounded', l.wounded, () => change(m, { wounded: !l.wounded })),
       toggle('Dying', l.dying, () => change(m, { dying: !l.dying })),
-      toggle('Inspired', l.inspired, () => change(m, { inspired: !l.inspired })),
+      toggle([Dice.special('Inspired', 'small'), ' Inspired'], l.inspired, () => change(m, { inspired: !l.inspired })),
       l.injury ? el('span', { class: 'cond' }, ['Injury: ' + l.injury]) : null,
     ]), 'play');
     add(el('div', { class: 'chiprow tight rests' }, [
