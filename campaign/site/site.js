@@ -70,7 +70,10 @@
       card('people', 'Dramatis Personae', n('people', 'person met', 'people met')),
       card('timeline', 'Timeline', timelineBody() ? 'the reckoning of years' : 'nothing yet'),
       card('atlas', 'Atlas', n('atlas', 'place', 'places')),
-      card('books', 'The books', idx.counts.books + ' books · ' + idx.counts.entities + ' entries'),
+      // the books' card only where their tab is on (VttConfig.siteBooks / Settings, engine/site.js,
+      // which draws the tab bar before this page)
+      document.querySelector('#site-tabs a[href="' + ctx.href('books', []) + '"]')
+        ? card('books', 'The books', idx.counts.books + ' books · ' + idx.counts.entities + ' entries') : null,
     ]));
   }
 
