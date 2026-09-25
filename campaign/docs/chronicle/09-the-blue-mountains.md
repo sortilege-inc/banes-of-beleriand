@@ -11,9 +11,9 @@ coves cut into the rock, and her family would take them in. Makheneb might get s
 not a common guest under the mountains. And she reminded them, once more, never to speak Fenja's
 other name.
 
-Of her own people she spoke gladly. Her mother and father were there, and her sister, who was
-married. Her sister and her husband grew things in the deep places of the mountain, food raised
-without the sun, and her sister kept a bakery that made the most of it. They had twin boys, Már's
+Of her own people she spoke gladly. Her mother and father were there, and her sister Etta, who was
+married to Onar. Etta and Onar grew things in the deep places of the mountain, food raised
+without the sun, and Etta kept a bakery that made the most of it. They had twin boys, Már's
 nephews. One of them wanted to follow his parents into the growing. The other, Nolly, had begun to
 learn Már's own trade, the laying of ghosts, and his mother was not at all sure she liked it. His
 grandparents were proud of him. There was a friend, too, Adis, who had hunted ghosts beside Már:
@@ -181,7 +181,7 @@ moment the Dwarf with the axe came at her, over and over, the same scene again a
 
 ## Morning
 
-At about the sixth hour Már was woken by her sister, and found herself wrapped in a hug. When she had
+At about the sixth hour Már was woken by Etta, and found herself wrapped in a hug. When she had
 pushed back enough not to smother, her sister stood away from her and held her face in her hands, and
 kept holding it.
 
@@ -192,7 +192,7 @@ That shook Már. She was grateful, and glad, and said so. She was sorry, she sai
 he had been gone so long. When had he disappeared? How had it happened? Had he been here, and then
 simply gone, and the others with him?
 
-Her sister would come round to those questions in time. For now she would not leave the reunion. She
+Etta would come round to those questions in time. For now she would not leave the reunion. She
 wanted only to be with Már, and to rejoice that she was here, and that neither of them was dead,
 though others were. When Már asked about Nolly, she turned the question aside, and came back each time
 to the same thing: he was all right, and he was home, and Már had brought him.
@@ -226,7 +226,7 @@ that it had asked something rude, and fled to find the right room.
 
 ## The remembrance
 
-Már and her sister were told that the remembrance would soon begin, and asked whether Már had eaten.
+Már and Etta were told that the remembrance would soon begin, and asked whether Már had eaten.
 She had not, and they fed her before the two of them went. Marigold went, and Nenuviel.
 
 Perry did not. In the ordinary way Perry was the most hospitable of them, always the one to go where
@@ -241,7 +241,7 @@ of the dead wore beautiful clothes or jewels; some had their weapons or armour w
 second part: the things that would remain after they had decayed, by which the dead would always be
 remembered. For some, people spoke of the halls and passages they had carved.
 
-Nolly was there with his father and mother, standing alongside Már. He was attentive and aware, and he
+Nolly was there with Onar and Etta, standing alongside Már. He was attentive and aware, and he
 did not shed a tear. He looked to be in shock. They walked past all the dead in turn.
 
 Then that part ended, and they were led into another room, where there was food, and people talked
@@ -274,7 +274,7 @@ edge away when he was caught in a conversation about how important the council w
 did not listen. He ate. When the platter was empty he went looking for a bakery, meaning to take
 whatever he could off whatever windowsill without talking to anybody.
 
-It was Már's sister's bakery he robbed. Among her many specialities the greatest were her braided
+It was Etta's bakery he robbed. Among her many specialities the greatest were her braided
 beards: sweet plaited loaves, with jam and other fillings running through them in colours, like
 ribbons woven through hair. There was one kind made with a nut that grew about those parts, roasted
 and ground to a paste with pieces left whole, so that it was creamy and crunchy at once. Perry took a
