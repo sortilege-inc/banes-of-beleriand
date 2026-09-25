@@ -180,6 +180,7 @@
           el('div', { class: 'card-sub muted small' }, [Sys().memberSubtitle(m)]),
           Sheet() ? el('div', { class: 'card-desc' }, [Sheet().statusLine(m)]) : null,
         ]),
+        window.VttGmText ? window.VttGmText.aboutSections('pc', m.name, draw) : null,
         el('div', { class: 'member-ops' }, [
           button('file', () => Sys().downloadCharacter(m), 'ghost tiny'),
           button('remove', () => { if (confirm('Remove ' + m.name + ' from the Company?')) State.commit('removePartyMember', [m.id]); }, 'ghost tiny'),
@@ -223,6 +224,9 @@
             sc && actor ? button('Put in ' + sc.name, () => putIn(cur, e.id), 'tiny') : null,
             el('a', { class: 'btn ghost tiny', href: './#' + (rec && rec.type === 'Adversary' ? 'adversaries/' : rec && actor ? 'folk/' : 'books/' + e.book + '/') + encodeURIComponent(e.id), target: '_blank' }, ['In the reader']),
           ]));
+          // the Loremaster's notes on this one (the People pane's sections "about" it)
+          const about = window.VttGmText && window.VttGmText.aboutSections('people', e.id, draw);
+          if (about) container.appendChild(about);
           container.appendChild(E.render(e, { onAttack: inspectorAttack }));
           if (rec && rec.type === 'Adversary') {
             const r = Dice.roller({ rating: 0, tn: '', switched: true, onRule: (id) => Panels.select({ kind: 'entity', id }), onRoll: (x) => logRoll(x, e.name, r.label || '') });
@@ -234,6 +238,8 @@
         });
       } else if (sel.kind === 'party') {
         const m = (S().party || []).find((x) => x.id === sel.id);
+        const about = m && window.VttGmText && window.VttGmText.aboutSections('pc', m.name, draw);
+        if (about) container.appendChild(about);
         container.appendChild(m ? Sys().liveSheet(m, { gm: true }) : el('div', { class: 'empty' }, ['That hero is no longer in the Company.']));
       } else container.appendChild(el('div', { class: 'empty' }, ['Nothing to show for ' + sel.kind + '.']));
     };

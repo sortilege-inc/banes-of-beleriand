@@ -108,7 +108,11 @@ window.VttSystem = (function () {
   }
   const memberSubtitle = (m) => (Sheet() ? Sheet().sentence(m.character || {}) : '');
 
+  // an entity or record by id, for the GM's notes (engine/gm-text.js "About")
+  const byId = (id) => { const r = D.record(id); if (r) return { id: r.id, name: r.name }; const e = D.entity(id); return e ? { id: e.id, name: e.name } : null; };
+
   return {
+    byId,
     get MODULE() { return adventureId(); }, adventureId, adventure, scenes, scene, currentSceneId, cast, castNamed,
     maps, mapDef, defaultMapId, legend, mapAssets,
     tokenSources, tokenColor, tokenStatus, selectToken, tokenMenu,
