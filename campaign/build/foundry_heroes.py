@@ -81,8 +81,8 @@ def find(type_, name, prefer=None):
 
 
 def untyped(name):
-    """An entity of the core named `name` that the records do not list (the corpus left it untyped:
-    the core's *Hardiness* sits outside its Virtues List without EXTENDS ^"Virtue")."""
+    """An entity of the core named `name` that the records do not list — a fallback for a corpus
+    that has left something untyped (the core's *Hardiness* was, until corpus d40463a)."""
     if "core" not in _BOOKS:
         try:
             load_entity("", "core")
