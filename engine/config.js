@@ -12,6 +12,12 @@ window.VttConfig = {
   // what a fresh browser opens on until a campaign is created or restored; the seed (engine/state.js
   // seed) is the Loremaster's material, built by campaign/build/seed_source.py
   defaultCampaign: { name: 'Banes of Beleriand', modules: [], books: [], seed: 'campaign/pack/seed.json' },
+  // The campaign's maps (system/tor2e/table.js mapAssets: the table's "maps in the repo…" list;
+  // campaign/site/site.js draws them atop the Atlas). From the Foundry world (campaign/PLAN.md U6).
+  maps: [
+    { label: 'Eriador', image: 'campaign/assets/maps/eriador.webp', preview: 'campaign/assets/maps/eriador-preview.webp' },
+    { label: 'Middle-earth', image: 'campaign/assets/maps/middle-earth.webp', preview: 'campaign/assets/maps/middle-earth-preview.webp' },
+  ],
   // the three panels the Loremaster's page opens on (engine/app.js)
   defaultSlots: ['scenes', 'company', 'inspector'],
   // What this instance adds to the upstream pages (engine/instance.js): its DSL layer (built by

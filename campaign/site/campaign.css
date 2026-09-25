@@ -45,3 +45,7 @@ ol.banes-toc a:hover, ul.banes-toc a:hover { color: var(--red); }
 @media (max-width: 720px) {
   .banes-portrait { float: none; display: block; width: 100%; margin: 0 0 14px; }
 }
+.banes-maps { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 0 0 22px; }
+.banes-map { margin: 0; }
+.banes-map img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 4px; }
+.banes-map figcaption { font-family: var(--font-ui); font-size: 14px; margin-top: 6px; }

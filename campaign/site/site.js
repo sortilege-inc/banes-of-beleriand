@@ -209,6 +209,12 @@
       return;
     }
     page.appendChild(el('h2', { class: 'chapter-h' }, ['Atlas']));
+    // the campaign's maps (VttConfig.maps), each a preview linking to the full image
+    const maps = ((window.VttConfig || {}).maps || []).filter((m) => m && m.image);
+    if (maps.length) page.appendChild(el('div', { class: 'banes-maps' }, maps.map((m) => el('figure', { class: 'banes-map' }, [
+      el('a', { href: m.image, target: '_blank', rel: 'noopener', title: 'Open ' + m.label + ' at full size' }, [el('img', { src: m.preview || m.image, alt: 'Map: ' + m.label, loading: 'lazy' })]),
+      el('figcaption', {}, [m.label, el('span', { class: 'muted small' }, [' · open at full size'])]),
+    ]))));
     if (!list('atlas').length) return page.appendChild(empty('places', 'atlas/'));
     groups(list('atlas'), 'region').forEach((g) => {
       if (g.name) page.appendChild(el('h4', {}, [g.name]));
