@@ -315,6 +315,23 @@ window.TorCreator = (function () {
   }
 
   // ── the page ──
+  // The page is rebuilt on every edit so the checks and derived values follow the draft; a rebuild
+  // replaces the box being typed in, so the focused field is found again by its place among the
+  // page's fields and given back its caret, and the scroll stays put.
+  function keepFocus(page, rebuild) {
+    const fields = () => Array.from(page.querySelectorAll('input, textarea, select'));
+    const a = document.activeElement;
+    const i = a && page.contains(a) ? fields().indexOf(a) : -1;
+    const sel = i !== -1 && typeof a.selectionStart === 'number' ? [a.selectionStart, a.selectionEnd] : null;
+    const y = window.scrollY;
+    rebuild();
+    window.scrollTo(0, y);
+    const b = i === -1 ? null : fields()[i];
+    if (!b || b.tagName !== a.tagName || b.type !== a.type) return;
+    b.focus({ preventScroll: true });
+    if (sel) b.setSelectionRange(sel[0], sel[1]);
+    else if (b.type === 'number') { b.type = 'text'; b.setSelectionRange(b.value.length, b.value.length); b.type = 'number'; } // a number box hides its caret: put it at the end
+  }
   function render(container, path, ctx) {
     const page = el('div', { class: 'page creator' });
     container.appendChild(page);
@@ -322,7 +339,7 @@ window.TorCreator = (function () {
       page.innerHTML = '';
       const d = draft();
       const v = d.character;
-      const redraw = () => { const y = window.scrollY; go(); window.scrollTo(0, y); };
+      const redraw = () => keepFocus(page, go);
       const list = Roster.list();
       page.appendChild(el('div', { class: 'chiprow' }, [
         el('h2', { class: 'chapter-h' }, ['Making a Player-hero']),
