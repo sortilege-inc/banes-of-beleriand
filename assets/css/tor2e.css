@@ -257,3 +257,4 @@ table.records.sets { width: auto; }
 table.records.sets tr.chosen td { background: rgba(79,107,58,.15); }
 .gap { border-left: 2px solid var(--red); padding-left: 8px; margin: 4px 0; }
 @media (max-width: 860px) { .two-up, .attrs, .roll-grid, .rated.skills { grid-template-columns: 1fr; } }
+.tile.pool .pool-cur input.num { width: 3.6em; padding: 2px 4px; border: 1px solid var(--rule); background: #fff; font: inherit; }

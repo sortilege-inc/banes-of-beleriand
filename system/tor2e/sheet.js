@@ -26,7 +26,7 @@ window.TorSheet = (function () {
     tnUse: { id: '#t1B5mKO356jm44ncLwVHzjZ', name: 'Target Numbers' },     // STRENGTH TN for attack rolls; HEART for VALOUR; WITS for WISDOM
     load: { id: '#tXBOzixZPLQIqK651XNZeXB', name: 'Load' },                // Weary while Endurance ≤ Load total
     fatigue: { id: '#t63wgX51qeTphz0RtGxNGEz', name: 'Fatigue' },          // Fatigue raises the Load total
-    treasure: { id: '#tIBypKet1tVqu4ihaV4Z2ct', name: 'Carrying Treasure' }, // "every single point of Treasure … corresponds to one point of Load"
+    treasure: { id: '#tIBypKet1tVqu4ihaV4Z2ct', name: 'Carrying Treasure' }, // "every single point of Treasure … corresponds to one point of Load" — Treasure carried; hidden or left at home is not
     shadow: { id: '#tJ5Je6tpsVcen9FIP4GQ2so', name: 'Shadow' },            // Miserable while Hope ≤ Shadow
     harden: { id: '#tqFlMkloxe7s58Fxyh9ppzI', name: 'Harden Will' },       // a Shadow Scar is a 'permanent' Shadow point; trade all Shadow for one Scar
     resting: { id: '#t8ukkGbMg2yDiQWDyejdv3l', name: 'Resting' },          // short rest: + STRENGTH (Wounded: none); prolonged: all (Wounded: + STRENGTH)
@@ -116,8 +116,10 @@ window.TorSheet = (function () {
     ['Armour', 'Helm', 'Shield'].forEach((k) => { n += Number(D.f(recordOf(v[k]), 'Load')) || 0; });
     return n;
   }
-  // "a Player-hero's Load total": war gear, Treasure (RULES.treasure) and Fatigue (RULES.fatigue)
-  const loadTotal = (m) => gearLoad(m.character || {}) + ((m.character || {}).Treasure || 0) * TREASURE_LOAD + (live(m).fatigue || 0);
+  // "a Player-hero's Load total": war gear, the Treasure carried (RULES.treasure) and Fatigue (RULES.fatigue).
+  // The sheet's Treasure is the hero's whole wealth; how much of it is on them is live state
+  // (`treasureCarried`, none by default), never more than the Treasure.
+  const loadTotal = (m) => gearLoad(m.character || {}) + live(m).treasureCarried * TREASURE_LOAD + (live(m).fatigue || 0);
   function live(m) {
     const v = m.character || {};
     const lv = m.live || {};
@@ -126,6 +128,7 @@ window.TorSheet = (function () {
       hope: lv.hope != null ? lv.hope : v.Hope,
       shadow: lv.shadow || 0, scars: lv.scars || 0, fatigue: lv.fatigue || 0,
       wounded: !!lv.wounded, injury: lv.injury || '', inspired: !!lv.inspired, dying: !!lv.dying,
+      treasureCarried: Math.max(0, Math.min(lv.treasureCarried || 0, v.Treasure || 0)),
     };
   }
   const shadowTotal = (m) => live(m).shadow + live(m).scars;                                  // RULES.harden: a Scar is a permanent Shadow point
@@ -301,7 +304,7 @@ window.TorSheet = (function () {
   // ── play: the record — every change to a tracker is logged with its cause ──
   const memberNow = (id, fallback) => ((State().state || {}).party || []).find((p) => p.id === id) || fallback || null;
   // the live keys a change is logged for, by their sheet names
-  const TRACKED = { endurance: 'Endurance', hope: 'Hope', shadow: 'Shadow', scars: 'Shadow Scars', fatigue: 'Fatigue', spEarned: 'Skill points earned', spSpent: 'Skill points spent', apEarned: 'Adventure points earned', apSpent: 'Adventure points spent' };
+  const TRACKED = { endurance: 'Endurance', hope: 'Hope', shadow: 'Shadow', scars: 'Shadow Scars', fatigue: 'Fatigue', treasureCarried: 'Treasure carried', spEarned: 'Skill points earned', spSpent: 'Skill points spent', apEarned: 'Adventure points earned', apSpent: 'Adventure points spent' };
   const FLAGS = { wounded: 'Wounded', dying: 'Dying', inspired: 'Inspired' };
   function logEvent(m, text, why) {
     State().commit('appendLog', [{ at: Date.now(), kind: 'event', who: m.name, memberId: m.id, text, why: why || null }]);
@@ -509,7 +512,14 @@ window.TorSheet = (function () {
       tally('Shadow', 'shadow', null, RULES.shadow),
       tally('Shadow Scars', 'scars', null, RULES.harden),
       tally('Fatigue', 'fatigue', null, RULES.fatigue),
-      el('div', { class: 'tile pool' }, [el('div', { class: 'pool-n' }, [cite(RULES.load, 'Load')]), el('div', { class: 'pool-cur' }, [el('b', {}, [String(loadTotal(m))])]), el('div', { class: 'muted tiny' }, ['gear ' + gearLoad(v) + ' · Treasure ' + ((v.Treasure || 0) * TREASURE_LOAD) + ' · Fatigue ' + l.fatigue])]),
+      el('div', { class: 'tile pool live' }, [el('div', { class: 'pool-n' }, [cite(RULES.treasure, 'Treasure carried')]),
+        el('div', { class: 'pool-cur' }, [ro ? el('b', {}, [String(l.treasureCarried)]) : el('input', { class: 'text small num', type: 'number', min: 0, max: v.Treasure || 0, value: l.treasureCarried, 'aria-label': 'Treasure carried', onchange: (ev) => patch(m, { treasureCarried: Math.max(0, Math.min(v.Treasure || 0, Math.floor(Number(ev.target.value) || 0))) }) }), el('span', { class: 'muted small' }, [' / ' + (v.Treasure || 0)])]),
+        ro ? null : el('div', { class: 'chiprow tight' }, [
+          button('none', () => patch(m, { treasureCarried: 0 }), 'ghost tiny'),
+          button('all', () => patch(m, { treasureCarried: v.Treasure || 0 }), 'ghost tiny'),
+        ]),
+      ]),
+      el('div', { class: 'tile pool' }, [el('div', { class: 'pool-n' }, [cite(RULES.load, 'Load')]), el('div', { class: 'pool-cur' }, [el('b', {}, [String(loadTotal(m))])]), el('div', { class: 'muted tiny' }, ['gear ' + gearLoad(v) + ' · Treasure carried ' + l.treasureCarried + ' of ' + (v.Treasure || 0) + ' · Fatigue ' + l.fatigue])]),
     ]);
   }
   function conditionsBlock(m, ro) {

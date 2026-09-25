@@ -147,7 +147,8 @@ window.TorPlayer = (function () {
     return el('div', { class: 'gear-pane' }, [
       el('div', { class: 'track-name' }, ['War gear']), rows.length ? rows : el('div', { class: 'muted' }, ['None.']),
       el('div', { class: 'track-name' }, ['Armour']), piece('Armour'), piece('Helm'), piece('Shield'),
-      el('div', { class: 'gear-sum' }, ['Protection ' + S.protectionOf(v) + 'd · Parry ' + (v.Parry == null ? '—' : v.Parry) + ' · Load ' + S.loadTotal(m) + ' (gear ' + S.gearLoad(v) + ', Treasure ' + (v.Treasure || 0) + ', Fatigue ' + l.fatigue + ')']),
+      el('div', { class: 'gear-sum' }, ['Protection ' + S.protectionOf(v) + 'd · Parry ' + (v.Parry == null ? '—' : v.Parry) + ' · Load ' + S.loadTotal(m) + ' (gear ' + S.gearLoad(v) + ', Treasure carried ' + l.treasureCarried + ' of ' + (v.Treasure || 0) + ', Fatigue ' + l.fatigue + ')']),
+      stepper('Treasure carried', l.treasureCarried, v.Treasure || 0, (n) => change(m, { treasureCarried: n })),
       v['Travelling Gear'] ? el('div', {}, [el('div', { class: 'track-name' }, ['Travelling gear']), el('div', {}, [v['Travelling Gear']])]) : null,
       el('div', { class: 'gear-sum' }, ['Standard of Living ' + (v['Standard of Living'] || '—') + ' · Treasure ' + (v.Treasure || 0)]),
       el('div', { class: 'player-notes' }, [el('div', { class: 'track-name' }, ['Notes']),
