@@ -38,6 +38,7 @@ button, input, select { font: inherit; }
 .rune-success { color: var(--green); }
 .rune.small { width: .8em; height: .8em; }
 .rune.spin { animation: pulse 1.2s ease-in-out infinite; }
+.btn .rune.special, .cond .rune.special { vertical-align: -0.12em; }
 @keyframes pulse { 50% { opacity: .35; } }
 
 /* ── the band ── */
@@ -182,16 +183,13 @@ ol.parts > li { margin: 8px 0 12px; }
 .rule-cite { color: var(--red); text-decoration: none; border-bottom: 1px dotted var(--red); }
 .roll-out { margin-top: 10px; min-height: 2em; }
 .faces { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.die { display: inline-flex; align-items: center; justify-content: center; gap: 2px; min-width: 38px; height: 38px; padding: 0 6px; font-family: var(--font-display); font-weight: 700; font-size: 18px; border-radius: 6px; }
-.die.feat { background: var(--ink); color: var(--parch); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); min-width: 42px; height: 44px; }
-.die.feat .rune { width: 22px; height: 22px; }
-.die.feat .rune-gandalf-rune { color: var(--gold-2); }
-.die.feat .rune-eye-of-sauron { color: var(--red-2); }
+/* the dice (assets/dice/: the Foundry tor2e system's faces) */
+.die { display: inline-block; width: 44px; height: 44px; object-fit: contain; vertical-align: middle; }
 .die.feat.dropped { opacity: .35; }
-.die.success { background: #fff; border: 2px solid var(--ink); color: var(--ink); }
-.die.success.outline { color: transparent; -webkit-text-stroke: 1px var(--ink); }
-.die.success.zeroed { opacity: .45; text-decoration: line-through; }
-.die.success.icon .rune { color: var(--green); }
+.die.success.zeroed { opacity: .6; }
+.die-tiles { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; }
+.die-tile { width: 24px; height: 24px; object-fit: contain; }
+.die-tiles .plus { margin: 0 3px; }
 .plus { font-family: var(--font-ui); color: var(--muted); }
 .verdict { margin-top: 8px; font-size: 18px; }
 .verdict.ok b { color: var(--green); }

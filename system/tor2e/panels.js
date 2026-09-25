@@ -33,7 +33,7 @@
   const rollLine = (x) => el('div', { class: 'roll-line' + (x.ok ? ' ok' : x.ok === false ? ' fail' : '') }, [
     el('span', { class: 'roll-who' }, [x.who || x.kind || 'note']),
     x.label ? el('span', { class: 'roll-what' }, [x.label]) : null,
-    el('span', { class: 'roll-text', html: E.inline(x.text || '') }),
+    el('span', { class: 'roll-text', html: (x.kind === 'roll' && Dice.lineHtml(x.text, E.inline)) || E.inline(x.text || '') }),
   ]);
 
   // ── Adventure: the adventure in play, its Parts and scenes ─────────

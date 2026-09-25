@@ -532,7 +532,7 @@ window.TorSheet = (function () {
       flag('wounded', 'Wounded', RULES.wounds),
       ro ? (l.injury ? el('span', { class: 'small' }, ['Injury: ' + l.injury]) : null) : el('input', { class: 'text small', type: 'text', placeholder: 'Injury', value: l.injury, onchange: (ev) => patch(m, { injury: ev.target.value }) }),
       flag('dying', 'Dying', RULES.dying),
-      flag('inspired', 'Inspired'),
+      flag('inspired', [Dice.special('Inspired', 'small'), ' Inspired']),
     ]);
   }
   function restsBlock(m, v) {
