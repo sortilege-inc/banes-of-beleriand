@@ -1,0 +1,196 @@
+{
+  "kind": "sortilege-vtt-character",
+  "version": 1,
+  "system": "tor2e",
+  "templateId": "#tor5PlayerHero00001",
+  "exported": "2025-05-14T00:00:00.000Z",
+  "name": "Marigold Cotton",
+  "character": {
+    "Name": "Marigold Cotton",
+    "Heroic Culture": {
+      "hash": "#twIEF78C6Mj23fQezwsh6u5",
+      "name": "Hobbits of the Shire"
+    },
+    "Age": 69,
+    "Standard of Living": "Common",
+    "Treasure": 30,
+    "Distinctive Features": [
+      {
+        "hash": "#tqlYx0PzJLC735W0PjyWMrA",
+        "name": "Keen-eyed"
+      },
+      {
+        "hash": "#tFzHYVkBgDZsq53ohhIw6Ej",
+        "name": "Rustic"
+      },
+      {
+        "hash": "#tyONNGk4ECgilo6viO48oUR",
+        "name": "Inquisitive"
+      },
+      {
+        "hash": "#tUSME8JgYIodYWcR26tjdpf",
+        "name": "Rhymes of Lore"
+      }
+    ],
+    "Cultural Blessing": "Hobbit-sense",
+    "Patron": "",
+    "Calling": {
+      "hash": "#tc3lbfDwJg2zwObySGrd0wp",
+      "name": "Scholar"
+    },
+    "Shadow Path": "Lure of Secrets",
+    "Flaws": [
+      "Halfling"
+    ],
+    "Strength": 4,
+    "Heart": 6,
+    "Wits": 4,
+    "Endurance": 22,
+    "Hope": 16,
+    "Parry": 16,
+    "Adventure Points": 0,
+    "Skill Points": 0,
+    "Fellowship Score": 8,
+    "Skills": [
+      {
+        "Skill": "Awe",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Enhearten",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Persuade",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Athletics",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Travel",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Stealth",
+        "Rank": 3,
+        "Favoured": true
+      },
+      {
+        "Skill": "Awareness",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Insight",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Scan",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Explore",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Healing",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Hunting",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Song",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Courtesy",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Riddle",
+        "Rank": 3,
+        "Favoured": true
+      },
+      {
+        "Skill": "Craft",
+        "Rank": 1,
+        "Favoured": true
+      },
+      {
+        "Skill": "Battle",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Lore",
+        "Rank": 0,
+        "Favoured": false
+      }
+    ],
+    "Combat Proficiencies": [
+      {
+        "Skill": "Axes",
+        "Rank": 1
+      },
+      {
+        "Skill": "Swords",
+        "Rank": 0
+      },
+      {
+        "Skill": "Spears",
+        "Rank": 0
+      },
+      {
+        "Skill": "Bows",
+        "Rank": 2
+      }
+    ],
+    "Valour": 1,
+    "Wisdom": 1,
+    "Rewards": [
+      {
+        "hash": "#tnVx2kAk5lOyYztSR622ghJ",
+        "name": "Cunning Make"
+      }
+    ],
+    "Virtues": [
+      {
+        "hash": "#tTFSzRWkKWu6R55TACbS8TS",
+        "name": "Art of Disappearing"
+      }
+    ],
+    "Travelling Gear": "Mushrooms from Goldberry, Home Apothecary Guidebook, Needle set",
+    "War Gear": [
+      {
+        "hash": "#tdlZQiDaBVLahQbWpGoM5WS",
+        "name": "Axe"
+      },
+      {
+        "hash": "#tEDHz5EQXr4IYm2DtA1lBoQ",
+        "name": "Bow"
+      }
+    ],
+    "Armour": {
+      "hash": "#tQpR4JNiQZHA1B0HhOGdvAI",
+      "name": "Mail-shirt"
+    },
+    "Helm": null,
+    "Shield": null
+  }
+}

@@ -9,8 +9,9 @@ window.VttConfig = {
   // The pages, relative to the site root; the gm/ pages carry <base href="../"> so every
   // path stays root-relative.
   pages: { site: './', gm: 'gm/', table: 'gm/vtt.html', play: 'gm/play.html' },
-  // what a fresh browser opens on until a campaign is created or restored
-  defaultCampaign: { name: 'Banes of Beleriand', modules: [], books: [] },
+  // what a fresh browser opens on until a campaign is created or restored; the seed (engine/state.js
+  // seed) is the Loremaster's material, built by campaign/build/seed_source.py
+  defaultCampaign: { name: 'Banes of Beleriand', modules: [], books: [], seed: 'campaign/pack/seed.json' },
   // the three panels the Loremaster's page opens on (engine/app.js)
   defaultSlots: ['scenes', 'company', 'inspector'],
   // What this instance adds to the upstream pages (engine/instance.js): its DSL layer (built by

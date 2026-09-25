@@ -1,0 +1,192 @@
+{
+  "kind": "sortilege-vtt-character",
+  "version": 1,
+  "system": "tor2e",
+  "templateId": "#tor5PlayerHero00001",
+  "exported": "2025-05-14T00:00:00.000Z",
+  "name": "Már",
+  "character": {
+    "Name": "Már",
+    "Heroic Culture": {
+      "hash": "#tQxSz07t7Dxb9OUBY8dp3pC",
+      "name": "Dwarves of Durin’s Folk"
+    },
+    "Age": null,
+    "Standard of Living": "Prosperous",
+    "Treasure": 0,
+    "Distinctive Features": [
+      {
+        "hash": "#t8ZMK9u4pPF5k923dmfS7Zu",
+        "name": "Enemy-lore"
+      }
+    ],
+    "Cultural Blessing": "Redoubtable",
+    "Patron": "",
+    "Calling": {
+      "hash": "#tdjDdQFRcby1U4WCY9ihRBv",
+      "name": "Champion"
+    },
+    "Shadow Path": "Curse of Vengeance",
+    "Flaws": [],
+    "Strength": 7,
+    "Heart": 3,
+    "Wits": 4,
+    "Endurance": 29,
+    "Hope": 11,
+    "Parry": 14,
+    "Adventure Points": 0,
+    "Skill Points": 0,
+    "Fellowship Score": 0,
+    "Skills": [
+      {
+        "Skill": "Awe",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Enhearten",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Persuade",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Athletics",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Travel",
+        "Rank": 3,
+        "Favoured": false
+      },
+      {
+        "Skill": "Stealth",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Awareness",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Insight",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Scan",
+        "Rank": 3,
+        "Favoured": false
+      },
+      {
+        "Skill": "Explore",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Healing",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Hunting",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Song",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Courtesy",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Riddle",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Craft",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Battle",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Lore",
+        "Rank": 1,
+        "Favoured": false
+      }
+    ],
+    "Combat Proficiencies": [
+      {
+        "Skill": "Axes",
+        "Rank": 2
+      },
+      {
+        "Skill": "Swords",
+        "Rank": 0
+      },
+      {
+        "Skill": "Spears",
+        "Rank": 1
+      },
+      {
+        "Skill": "Bows",
+        "Rank": 0
+      }
+    ],
+    "Valour": 1,
+    "Wisdom": 1,
+    "Rewards": [
+      {
+        "hash": "#tiBKUH260iidJOqntVA4P19",
+        "name": "Reinforced"
+      }
+    ],
+    "Virtues": [
+      {
+        "hash": "#tmzMtAT3GTM48w2kJS05DB6",
+        "name": "Dark for Dark Business"
+      }
+    ],
+    "Travelling Gear": "",
+    "War Gear": [
+      {
+        "hash": "#tdlZQiDaBVLahQbWpGoM5WS",
+        "name": "Axe"
+      },
+      {
+        "hash": "#tXvKMBIDFeGsV9Bg6M9kXhk",
+        "name": "Spear"
+      },
+      {
+        "hash": "#tZAGPMzBhM3m6uYvb2vepre",
+        "name": "Unarmed"
+      }
+    ],
+    "Armour": {
+      "hash": "#twYI1OwzAE5YosWdwUo31ug",
+      "name": "Coat of Mail"
+    },
+    "Helm": {
+      "hash": "#trABmEyd3qDS2zObtLlLLmh",
+      "name": "Helm"
+    },
+    "Shield": {
+      "hash": "#tiFvJ845wXQfdJ0KDwuaOyo",
+      "name": "Shield"
+    }
+  }
+}

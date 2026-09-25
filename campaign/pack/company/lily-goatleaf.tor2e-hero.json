@@ -1,0 +1,197 @@
+{
+  "kind": "sortilege-vtt-character",
+  "version": 1,
+  "system": "tor2e",
+  "templateId": "#tor5PlayerHero00001",
+  "exported": "2025-05-14T00:00:00.000Z",
+  "name": "Lily Goatleaf",
+  "character": {
+    "Name": "Lily Goatleaf",
+    "Heroic Culture": {
+      "hash": "#tkvwLciJ3NeoNkkEucOnn3n",
+      "name": "Men of Bree"
+    },
+    "Age": 25,
+    "Standard of Living": "Common",
+    "Treasure": 30,
+    "Distinctive Features": [
+      {
+        "hash": "#twHrresytRUt9zCRlBnQBck",
+        "name": "Faithful"
+      },
+      {
+        "hash": "#tyONNGk4ECgilo6viO48oUR",
+        "name": "Inquisitive"
+      },
+      {
+        "hash": "#tFzHYVkBgDZsq53ohhIw6Ej",
+        "name": "Rustic"
+      },
+      {
+        "hash": "#t2fRsnAVu9dWKhDeZ9iDaz1",
+        "name": "Folk-lore"
+      }
+    ],
+    "Cultural Blessing": "Bree-blood",
+    "Patron": "",
+    "Calling": {
+      "hash": "#tV8CvE4G0qXOknGnpAOT8xf",
+      "name": "Messenger"
+    },
+    "Shadow Path": "Wandering-madness",
+    "Flaws": [],
+    "Strength": 3,
+    "Heart": 4,
+    "Wits": 7,
+    "Endurance": 23,
+    "Hope": 14,
+    "Parry": 17,
+    "Adventure Points": 0,
+    "Skill Points": 0,
+    "Fellowship Score": 0,
+    "Skills": [
+      {
+        "Skill": "Awe",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Enhearten",
+        "Rank": 3,
+        "Favoured": false
+      },
+      {
+        "Skill": "Persuade",
+        "Rank": 3,
+        "Favoured": false
+      },
+      {
+        "Skill": "Athletics",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Travel",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Stealth",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Awareness",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Insight",
+        "Rank": 2,
+        "Favoured": true
+      },
+      {
+        "Skill": "Scan",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Explore",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Healing",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Hunting",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Song",
+        "Rank": 1,
+        "Favoured": true
+      },
+      {
+        "Skill": "Courtesy",
+        "Rank": 3,
+        "Favoured": true
+      },
+      {
+        "Skill": "Riddle",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Craft",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Battle",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Lore",
+        "Rank": 0,
+        "Favoured": false
+      }
+    ],
+    "Combat Proficiencies": [
+      {
+        "Skill": "Axes",
+        "Rank": 0
+      },
+      {
+        "Skill": "Swords",
+        "Rank": 1
+      },
+      {
+        "Skill": "Spears",
+        "Rank": 2
+      },
+      {
+        "Skill": "Bows",
+        "Rank": 0
+      }
+    ],
+    "Valour": 1,
+    "Wisdom": 1,
+    "Rewards": [
+      {
+        "hash": "#tz5b1vzJym73rTnBbo1wwgo",
+        "name": "Grievous"
+      }
+    ],
+    "Virtues": [
+      {
+        "hash": "#tG8lehN34BzH8fdIUfnW3PK",
+        "name": "Hardiness"
+      }
+    ],
+    "Travelling Gear": "Liquor, Healing Balm",
+    "War Gear": [
+      {
+        "hash": "#tXvKMBIDFeGsV9Bg6M9kXhk",
+        "name": "Spear"
+      },
+      {
+        "hash": "#tWxvk4o1si2nzBtYpNhVYIO",
+        "name": "Short Sword"
+      }
+    ],
+    "Armour": {
+      "hash": "#tw4bKkWFxX7GiLpqaRFck1A",
+      "name": "Leather Corslet"
+    },
+    "Helm": null,
+    "Shield": {
+      "hash": "#t8ZGPHXycMcW0HjIaaxNjEJ",
+      "name": "Buckler"
+    }
+  }
+}

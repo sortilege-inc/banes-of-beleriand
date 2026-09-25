@@ -1,0 +1,196 @@
+{
+  "kind": "sortilege-vtt-character",
+  "version": 1,
+  "system": "tor2e",
+  "templateId": "#tor5PlayerHero00001",
+  "exported": "2025-05-14T00:00:00.000Z",
+  "name": "Makheneb",
+  "character": {
+    "Name": "Makheneb",
+    "Heroic Culture": {
+      "hash": "#thd4JgoggTHtoZHGuOoZygF",
+      "name": "Elves of Mirkwood"
+    },
+    "Age": 299,
+    "Standard of Living": "Poor",
+    "Treasure": 0,
+    "Distinctive Features": [
+      {
+        "hash": "#tfhc7LHCofRHHZhRxRdiVCP",
+        "name": "Cunning"
+      },
+      {
+        "hash": "#tqlYx0PzJLC735W0PjyWMrA",
+        "name": "Keen-eyed"
+      },
+      {
+        "hash": "#tRLpeM8lw9tHy2Zo0oFTtrS",
+        "name": "Shadow-lore"
+      }
+    ],
+    "Cultural Blessing": "Folk of the Dusk",
+    "Patron": "",
+    "Calling": {
+      "hash": "#tfIA9eruXZr77g8NMUaYBJh",
+      "name": "Warden"
+    },
+    "Shadow Path": "Path of Despair",
+    "Flaws": [],
+    "Strength": 6,
+    "Heart": 2,
+    "Wits": 6,
+    "Endurance": 24,
+    "Hope": 10,
+    "Parry": 20,
+    "Adventure Points": 0,
+    "Skill Points": 0,
+    "Fellowship Score": 0,
+    "Skills": [
+      {
+        "Skill": "Awe",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Enhearten",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Persuade",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Athletics",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Travel",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Stealth",
+        "Rank": 3,
+        "Favoured": true
+      },
+      {
+        "Skill": "Awareness",
+        "Rank": 2,
+        "Favoured": true
+      },
+      {
+        "Skill": "Insight",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Scan",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Explore",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Healing",
+        "Rank": 1,
+        "Favoured": true
+      },
+      {
+        "Skill": "Hunting",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Song",
+        "Rank": 2,
+        "Favoured": false
+      },
+      {
+        "Skill": "Courtesy",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Riddle",
+        "Rank": 0,
+        "Favoured": false
+      },
+      {
+        "Skill": "Craft",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Battle",
+        "Rank": 1,
+        "Favoured": false
+      },
+      {
+        "Skill": "Lore",
+        "Rank": 2,
+        "Favoured": false
+      }
+    ],
+    "Combat Proficiencies": [
+      {
+        "Skill": "Axes",
+        "Rank": 0
+      },
+      {
+        "Skill": "Swords",
+        "Rank": 1
+      },
+      {
+        "Skill": "Spears",
+        "Rank": 0
+      },
+      {
+        "Skill": "Bows",
+        "Rank": 3
+      }
+    ],
+    "Valour": 1,
+    "Wisdom": 1,
+    "Rewards": [
+      {
+        "hash": "#t1KSCRnAoTmRSkXD1RwygYB",
+        "name": "Fell"
+      }
+    ],
+    "Virtues": [
+      {
+        "hash": "#tzwMfm8Tb7GSVLZu1dskhIh",
+        "name": "Deadly Archery"
+      }
+    ],
+    "Travelling Gear": "Rope, Grappling Hook",
+    "War Gear": [
+      {
+        "hash": "#tEDHz5EQXr4IYm2DtA1lBoQ",
+        "name": "Bow"
+      },
+      {
+        "hash": "#tWxvk4o1si2nzBtYpNhVYIO",
+        "name": "Short Sword"
+      }
+    ],
+    "Armour": {
+      "hash": "#tw4bKkWFxX7GiLpqaRFck1A",
+      "name": "Leather Corslet"
+    },
+    "Helm": {
+      "hash": "#trABmEyd3qDS2zObtLlLLmh",
+      "name": "Helm"
+    },
+    "Shield": {
+      "hash": "#t8ZGPHXycMcW0HjIaaxNjEJ",
+      "name": "Buckler"
+    }
+  }
+}
