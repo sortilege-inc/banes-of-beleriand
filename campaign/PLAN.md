@@ -43,11 +43,11 @@ Worker is not deployed (`engine/config.js` `worker.deployed` empty).
 opens on *Scenes · Company · Inspector*. `campaign/docs/veil/` held nothing (`build_docs: … veil 0`),
 so there was nothing to move. (Considered: keeping the veil until there was content.)
 
-**O3 — The content (owner, 2026-09-24).** Sources: `~/Downloads/2025 Banes of Beleriand/` — nine
+**O3 — The content (owner, 2026-09-24).** Sources: `../banes-of-beleriand-support/archive/` (moved there from `~/Downloads/2025 Banes of Beleriand/` on 2026-09-26, in Caul's layout) — nine
 sessions 2025-05-06 … 09-09 as audio + machine transcripts (08-26 in several recordings), the
 2025-05-04 premise talk, five Foundry actors, art, the treasure index; and two Notion exports: the
-players' wiki (`a87c443a…/Private & Shared/`: session notes 01–08, characters, Songs of the
-Fellowship) and the GM's notes (`446a1320…/`: the campaign overview, the four Nameless Things —
+players' wiki (`notion-export/2026-09-24/players-wiki/Private & Shared/`: session notes 01–08, characters, Songs of the
+Fellowship) and the GM's notes (`notion-export/2026-09-24/gm-notes/`: the campaign overview, the four Nameless Things —
 Tarkûrzagûl, Môrthuring, Uludrith, Thrakdûmpuzûr — Barad Tarminalë, lore Q&A, a Third-Age
 timeline). **Precedence (owner):** the wiki's spellings are the most correct; the transcripts'
 content is more complete than the wiki. Settled:
