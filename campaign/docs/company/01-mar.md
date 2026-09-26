@@ -3,6 +3,7 @@ name: Már
 epithet: who lays the restless dead
 culture: Dwarves of Durin’s Folk
 calling: Champion
+portrait: assets/portraits/mar.webp
 sheet: pack/company/mar.tor2e-hero.json
 ---
 
